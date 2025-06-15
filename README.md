@@ -1,4 +1,4 @@
-# TLU-Study-Planner
+# TLU-Routine
 
 Đây là dự án prototype được phát triển cho môn học Tương tác Người-Máy. Mục tiêu chính của dự án là thiết kế và hiện thực hóa một giao diện người dùng (UI/UX) thân thiện, dễ sử dụng, đồng thời áp dụng kiến trúc phát triển Android hiện đại để giúp sinh viên trường Đại học Thủy Lợi (TLU) lập kế hoạch học tập hiệu quả.
 
