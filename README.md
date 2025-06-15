@@ -24,12 +24,12 @@ Dự án được xây dựng theo kiến trúc **Single-Activity**, một phư�
 Dự án được tổ chức một cách chuyên nghiệp, tách biệt rõ ràng các thành phần trong mã nguồn Java.
 
 ```plaintext
-TLU-Study-Planner/
+TLU-Routine/
 └── app/
     └── src/
         └── main/
             ├── java/
-            │   └── com/example/tlu_study_planner/
+            │   └── com/example/tlu_routine/
             │       ├── activity/              // Chứa MainActivity
             │       ├── adapter/               // Chứa các lớp Adapter cho RecyclerView
             │       └── fragment/              // Chứa các màn hình (Fragment)
