@@ -19,6 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "TLU-Study-Planner"
+rootProject.name = "TLU-Routine"
 include(":app")
  

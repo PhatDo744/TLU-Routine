@@ -3,11 +3,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.tlu_study_planner"
+    namespace = "com.example.tlu_routine"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.example.tlu_study_planner"
+        applicationId = "com.example.tlu_routine"
         minSdk = 24
         targetSdk = 35
         versionCode = 1
