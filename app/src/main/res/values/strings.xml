@@ -1,3 +1,43 @@
+<!-- res/values/strings.xml -->
 <resources>
     <string name="app_name">TLU-Routine</string>
+
+    <!-- Home Screen -->
+    <string name="home_toolbar_title_placeholder">Tháng 5 2025</string>
+    <string name="empty_state_message">Không có công việc nào được lên lịch cho ngày đã chọn.</string>
+    <string name="add_task_button_text"> Thêm công việc</string>
+
+    <!-- Tag Manager Screen -->
+    <string name="tag_manager_title">Quản lý thẻ sự kiện</string>
+    <string name="create_new_tag">Tạo Thẻ Mới</string>
+    <string name="tag_list">Danh Sách Thẻ</string>
+
+    <!-- Add/Edit Tag Dialog -->
+    <string name="dialog_create_tag_title">Tạo Thẻ Mới</string>
+    <string name="dialog_edit_tag_title">Sửa Thẻ Sự Kiện</string>
+    <string name="tag_name_required_label">Tên thẻ (bắt buộc):</string>
+    <string name="tag_color_optional_label">Màu sắc (tùy chọn):</string>
+    <string name="custom_color_label">Màu tùy chỉnh:</string>
+    <string name="pick_a_color_button">Chọn màu</string>
+    <string name="select_custom_color_title">Chọn màu tùy chỉnh</string>
+    <string name="select_button">Chọn</string>
+    <string name="tag_icon_optional_label">Icon (tùy chọn):</string>
+    <string name="save_tag_button">Lưu Thẻ</string>
+    <string name="update_tag_button">Cập Nhật</string>
+    <string name="cancel_button">Hủy Bỏ</string>
+
+    <!-- Content Descriptions -->
+    <string name="cd_no_tasks">Không có công việc</string>
+    <string name="cd_add_new_task">Thêm công việc mới</string>
+    <string name="cd_calendar_icon">Biểu tượng lịch</string>
+    <string name="cd_edit_tag">Sửa thẻ</string>
+    <string name="cd_delete_tag">Xóa thẻ</string>
+
+    <!-- Menu Titles -->
+    <string name="menu_search">Tìm kiếm</string>
+    <string name="menu_filter">Lọc</string>
+    <string name="menu_settings">Cài đặt</string>
+    <string name="menu_stats">Thống kê</string>
+    <string name="menu_tags">Thẻ</string>
+
 </resources>

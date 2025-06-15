@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white"
+    tools:context="com.example.tlu_routine.fragment.HomeFragment">
+
+    <!-- Thanh công cụ trên cùng -->
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/app_bar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        app:elevation="0dp">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:title="@string/home_toolbar_title_placeholder"
+            app:titleTextColor="@android:color/black"
+            app:titleCentered="true"
+            app:navigationIcon="@drawable/ic_calendar_today"
+            app:menu="@menu/home_toolbar_menu" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <!-- Nội dung chính của màn hình -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Bộ chọn ngày (sử dụng RecyclerView) -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/date_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            tools:listitem="@layout/item_date"
+            tools:itemCount="7"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            android:layout_marginBottom="16dp"/>
+
+        <!-- Vùng hiển thị khi không có công việc -->
+        <LinearLayout
+            android:id="@+id/empty_state_layout"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="visible">
+
+            <ImageView
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:src="@drawable/ic_calendar_month"
+                android:contentDescription="@string/cd_no_tasks"
+                app:tint="@color/material_grey_600"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/empty_state_message"
+                android:textAlignment="center"
+                android:textColor="@color/material_grey_600"
+                android:textSize="16sp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/add_task_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="@string/add_task_button_text"
+                app:cornerRadius="20dp"/>
+
+        </LinearLayout>
+
+        <!-- Vùng hiển thị danh sách công việc (sử dụng RecyclerView khác) -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/tasks_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:visibility="gone"
+            />
+
+    </LinearLayout>
+</LinearLayout>

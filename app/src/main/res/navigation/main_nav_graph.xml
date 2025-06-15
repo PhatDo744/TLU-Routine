@@ -1,6 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/main_nav_graph">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_nav_graph"
+    app:startDestination="@id/homeFragment">
 
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.tlu_routine.fragment.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" />
+
+    <fragment
+        android:id="@+id/nav_stats"
+        android:label="Thống kê"
+        tools:layout="@layout/fragment_home" />
+
+    <fragment
+        android:id="@+id/nav_tags"
+        android:name="com.example.tlu_routine.fragment.TagManagerFragment"
+        android:label="Quản lý thẻ sự kiện"
+        tools:layout="@layout/fragment_tag_manager" />
+
+    <!-- Destination cho dialog thêm/sửa thẻ -->
+    <dialog
+        android:id="@+id/addEditTagDialogFragment"
+        android:name="com.example.tlu_routine.fragment.AddEditTagDialogFragment"
+        android:label="dialog_add_edit_tag"
+        tools:layout="@layout/dialog_add_edit_tag" />
+
+    <action
+        android:id="@+id/action_tagManagerFragment_to_addEditTagDialogFragment"
+        app:destination="@id/addEditTagDialogFragment" />
 </navigation>
