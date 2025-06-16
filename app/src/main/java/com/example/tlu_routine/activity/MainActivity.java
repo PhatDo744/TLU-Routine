@@ -5,6 +5,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
@@ -28,7 +29,6 @@ public class MainActivity extends AppCompatActivity {
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.nav_host_fragment);
         NavController navController = navHostFragment.getNavController();
-
 
         // Thiết lập sự kiện click cho menu của BottomAppBar
         bottomAppBar.setOnMenuItemClickListener(item -> {
@@ -54,7 +54,10 @@ public class MainActivity extends AppCompatActivity {
                 // Ẩn thanh điều hướng trên màn hình Quản lý thẻ
                 bottomAppBar.setVisibility(View.GONE);
                 fabAdd.setVisibility(View.GONE);
-            } else {
+            }
+
+                // Ẩn thanh điều hướng
+            else {
                 // Hiện thanh điều hướng trên các màn hình khác (Home, Stats,...)
                 bottomAppBar.setVisibility(View.VISIBLE);
                 fabAdd.setVisibility(View.VISIBLE);

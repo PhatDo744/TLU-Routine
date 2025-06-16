@@ -29,6 +29,7 @@ public class HomeFragment extends Fragment {
     // private DateAdapter dateAdapter;
     // private TaskAdapter taskAdapter;
 
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -45,6 +46,7 @@ public class HomeFragment extends Fragment {
         dateRecyclerView = view.findViewById(R.id.date_recycler_view);
         tasksRecyclerView = view.findViewById(R.id.tasks_recycler_view);
         emptyStateLayout = view.findViewById(R.id.empty_state_layout);
+
 
         // Thiết lập Toolbar
         setupToolbar();
@@ -74,6 +76,7 @@ public class HomeFragment extends Fragment {
             }
             return false;
         });
+
     }
 
     private void setupDateRecyclerView() {

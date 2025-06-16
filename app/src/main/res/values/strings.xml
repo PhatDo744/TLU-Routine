@@ -40,4 +40,25 @@
     <string name="menu_stats">Thống kê</string>
     <string name="menu_tags">Thẻ</string>
 
+    <!-- Statistics Screen -->
+    <string name="statistics_title">Thống kê</string>
+    <string name="performance_title">Hiệu suất</string>
+    <string name="date_range">từ %1$s đến %2$s</string>
+    <string name="weekly_activity_title">Hoạt động trong tuần</string>
+    <string name="monday_short">T2</string>
+    <string name="tuesday_short">T3</string>
+    <string name="wednesday_short">T4</string>
+    <string name="thursday_short">T5</string>
+    <string name="friday_short">T6</string>
+    <string name="saturday_short">T7</string>
+    <string name="sunday_short">CN</string>
+    <string name="completed">Hoàn thành</string>
+    <string name="total">Tổng cộng</string>
+    <string name="achievements_title">Thành tích</string>
+    <string name="monthly_tasks_completed">Nhiệm vụ hoàn thành</string>
+    <string name="completion_rate_title">Tỷ lệ hoàn thành</string>
+    <string name="average_weekly_completion">Trung bình tuần này</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>
