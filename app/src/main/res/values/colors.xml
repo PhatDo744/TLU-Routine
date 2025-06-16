@@ -11,5 +11,5 @@
     <!-- Icon Chip State Colors -->
     <color name="icon_chip_bg_selected">#EBF4FF</color>
     <color name="icon_chip_stroke_selected">#3B82F6</color>
-    
+    <color name="delete_button_red">#DC2626</color>
 </resources>

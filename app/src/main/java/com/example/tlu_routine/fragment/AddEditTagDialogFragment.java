@@ -22,8 +22,10 @@ import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.textfield.TextInputEditText;
+import com.skydoves.colorpickerview.ColorEnvelope;
 import com.skydoves.colorpickerview.ColorPickerView;
 import com.skydoves.colorpickerview.listeners.ColorEnvelopeListener;
+import com.skydoves.colorpickerview.sliders.AlphaSlideBar;
 import com.skydoves.colorpickerview.sliders.BrightnessSlideBar;
 
 public class AddEditTagDialogFragment extends DialogFragment {
@@ -36,6 +38,7 @@ public class AddEditTagDialogFragment extends DialogFragment {
     private MaterialCardView customColorPickerCard;
     private ColorPickerView colorPickerView;
     private TextView tvCustomColorHex;
+    private LinearLayout hexDisplayContainer;
     private TextView tvDialogTitle;
     private MaterialButton saveButton;
     private MaterialButton cancelButton;
@@ -45,12 +48,12 @@ public class AddEditTagDialogFragment extends DialogFragment {
     private LinearLayout customIconContainer;
     private Chip chipCustomIcon;
 
-
-    private String selectedColorHex = null;
+    private String selectedColorHex = "#3B82F6"; // Default color
+    private int selectedIconRes = R.drawable.ic_book; // Default icon
     private Tag tagToEdit = null;
+    private int tagPosition = -1;
 
     private final int customIconResId = R.drawable.ic_tag;
-
     private final String[] colorPalette = {"#EF4444", "#F97316", "#F59E0B", "#84CC16", "#22C55E", "#10B981", "#06B6D4", "#3B82F6", "#8B5CF6", "#EC4899"};
     private final int[] iconPalette = {R.drawable.ic_book, R.drawable.ic_briefcase, R.drawable.ic_person, R.drawable.ic_trophy, R.drawable.ic_lightbulb, R.drawable.ic_calendar_day, R.drawable.ic_money, R.drawable.ic_laptop, R.drawable.ic_target};
 
@@ -59,6 +62,7 @@ public class AddEditTagDialogFragment extends DialogFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if (getArguments() != null) {
             tagToEdit = getArguments().getParcelable("tag_to_edit");
+            tagPosition = getArguments().getInt("tag_position", -1);
         }
         return inflater.inflate(R.layout.dialog_add_edit_tag, container, false);
     }
@@ -89,6 +93,7 @@ public class AddEditTagDialogFragment extends DialogFragment {
         colorPickerView = view.findViewById(R.id.color_picker_view);
         BrightnessSlideBar brightnessSlider = view.findViewById(R.id.brightness_slider);
         tvCustomColorHex = view.findViewById(R.id.tv_custom_color_hex);
+        hexDisplayContainer = view.findViewById(R.id.hex_display_container);
         tvDialogTitle = view.findViewById(R.id.tv_dialog_title);
         saveButton = view.findViewById(R.id.btn_save_tag);
         cancelButton = view.findViewById(R.id.btn_cancel);
@@ -97,8 +102,10 @@ public class AddEditTagDialogFragment extends DialogFragment {
         customIconContainer = view.findViewById(R.id.custom_icon_container);
 
 
-        if (colorPickerView != null && brightnessSlider != null) {
-            colorPickerView.attachBrightnessSlider(brightnessSlider);
+        if (colorPickerView != null) {
+            if (brightnessSlider != null) {
+                colorPickerView.attachBrightnessSlider(brightnessSlider);
+            }
         }
     }
 
@@ -108,19 +115,16 @@ public class AddEditTagDialogFragment extends DialogFragment {
             customColorPickerCard.setVisibility(isPickerVisible ? View.GONE : View.VISIBLE);
             if (!isPickerVisible) {
                 colorChipGroup.clearCheck();
-                if (colorPickerView != null) {
-                    selectedColorHex = "#" + colorPickerView.getColorEnvelope().getHexCode();
-                    updateCustomColorPreview(selectedColorHex);
-                }
             }
         });
 
         if (colorPickerView != null) {
-            colorPickerView.setColorListener((ColorEnvelopeListener) (envelope, fromUser) -> {
-                if (envelope != null) {
-                    String hexCode = "#" + envelope.getHexCode();
-                    tvCustomColorHex.setText(hexCode);
-                    tvCustomColorHex.setBackgroundColor(envelope.getColor());
+            colorPickerView.setColorListener(new ColorEnvelopeListener() {
+                @Override
+                public void onColorSelected(ColorEnvelope envelope, boolean fromUser) {
+                    if(envelope != null) {
+                        updateHexDisplay(envelope.getColor(), "#" + envelope.getHexCode());
+                    }
                 }
             });
         }
@@ -148,7 +152,7 @@ public class AddEditTagDialogFragment extends DialogFragment {
     private void setupColorChips() {
         if (getContext() == null) return;
         colorChipGroup.removeAllViews();
-        int size = (int) (45 * getResources().getDisplayMetrics().density); // FIXED: Changed size back to 40dp
+        int size = (int) (40 * getResources().getDisplayMetrics().density);
 
         for (String color : colorPalette) {
             Chip chip = new Chip(getContext());
@@ -277,6 +281,7 @@ public class AddEditTagDialogFragment extends DialogFragment {
 
         int iconToSelect = tagToEdit.getIconResId();
         if (iconToSelect != -1) {
+            selectedIconRes = iconToSelect;
             if (iconToSelect == customIconResId) {
                 chipCustomIcon.setChecked(true);
             } else {
@@ -294,13 +299,30 @@ public class AddEditTagDialogFragment extends DialogFragment {
     private void updateCustomColorPreview(String colorHex) {
         if (getContext() == null) return;
         if (colorHex != null) {
-            customColorPreview.setCardBackgroundColor(Color.parseColor(colorHex));
+            try {
+                customColorPreview.setCardBackgroundColor(Color.parseColor(colorHex));
+            } catch (IllegalArgumentException e) {
+                customColorPreview.setCardBackgroundColor(ContextCompat.getColor(getContext(), R.color.material_grey_600));
+            }
         } else {
             customColorPreview.setCardBackgroundColor(ContextCompat.getColor(getContext(), R.color.material_grey_600));
         }
     }
 
-    // ----- Helper Methods for creating ColorStateLists -----
+    private void updateHexDisplay(int color, String hexCode) {
+        if (hexDisplayContainer != null) {
+            hexDisplayContainer.setBackgroundColor(color);
+        }
+        if (tvCustomColorHex != null) {
+            tvCustomColorHex.setText(hexCode.toUpperCase());
+            double darkness = 1 - (0.299 * Color.red(color) + 0.587 * Color.green(color) + 0.114 * Color.blue(color)) / 255;
+            if (darkness >= 0.5) {
+                tvCustomColorHex.setTextColor(Color.WHITE);
+            } else {
+                tvCustomColorHex.setTextColor(Color.BLACK);
+            }
+        }
+    }
 
     private ColorStateList createColorChipStrokeList() {
         if (getContext() == null) return null;
@@ -310,7 +332,7 @@ public class AddEditTagDialogFragment extends DialogFragment {
                         new int[]{}
                 },
                 new int[]{
-                        ContextCompat.getColor(requireContext(), R.color.icon_chip_stroke_selected), // Blue border
+                        ContextCompat.getColor(requireContext(), R.color.icon_chip_stroke_selected),
                         Color.TRANSPARENT
                 }
         );
@@ -365,7 +387,6 @@ public class AddEditTagDialogFragment extends DialogFragment {
             return;
         }
 
-        int selectedIconRes = -1;
         int checkedIconId = iconChipGroup.getCheckedChipId();
         if (checkedIconId != View.NO_ID) {
             Chip checkedChip = iconChipGroup.findViewById(checkedIconId);
@@ -376,15 +397,15 @@ public class AddEditTagDialogFragment extends DialogFragment {
             selectedIconRes = (int) chipCustomIcon.getTag();
         }
 
-        String toastMessage;
-        if (tagToEdit != null) {
-            toastMessage = "Đã cập nhật thẻ:\n";
-        } else {
-            toastMessage = "Đã lưu thẻ:\n";
-        }
+        // Tạo đối tượng Tag mới với dữ liệu đã chọn
+        Tag resultTag = new Tag(tagName, selectedColorHex, selectedIconRes);
 
-        String log = "Tên: " + tagName + "\nMàu: " + selectedColorHex + "\nIcon Res ID: " + selectedIconRes;
-        Toast.makeText(getContext(), toastMessage + log, Toast.LENGTH_LONG).show();
+        // Gửi kết quả trở lại Fragment cha
+        Bundle result = new Bundle();
+        result.putParcelable("tag_result", resultTag);
+        result.putInt("tag_position", tagPosition);
+        getParentFragmentManager().setFragmentResult("tag_request", result);
+
         dismiss();
     }
 

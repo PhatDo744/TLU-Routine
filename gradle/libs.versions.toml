@@ -1,5 +1,6 @@
 [versions]
 agp = "8.10.1"
+colorpicker = "2.5"
 colorpickerview = "2.2.4"
 junit = "4.13.2"
 junitVersion = "1.2.1"
@@ -12,6 +13,7 @@ navigationFragment = "2.9.0"
 navigationUi = "2.9.0"
 
 [libraries]
+colorpicker = { module = "com.github.duanhong169:ColorPicker", version.ref = "colorpicker" }
 colorpickerview = { module = "com.github.skydoves:colorpickerview", version.ref = "colorpickerview" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }

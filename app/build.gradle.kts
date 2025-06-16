@@ -42,5 +42,5 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
-    implementation (libs.colorpickerview)
+    implementation("com.github.skydoves:colorpickerview:2.2.4")
 }

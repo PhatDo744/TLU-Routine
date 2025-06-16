@@ -41,4 +41,8 @@
     <string name="menu_stats">Thống kê</string>
     <string name="menu_tags">Thẻ</string>
 
+    <string name="delete_confirmation_title">Xác Nhận Xóa</string>
+    <string name="delete_confirmation_message">Bạn có chắc muốn xóa thẻ "%1$s"?</string>
+    <string name="delete_irreversible_note">Thao tác này không thể hoàn tác.</string>
+    <string name="confirm_button">Xác Nhận</string>
 </resources>
