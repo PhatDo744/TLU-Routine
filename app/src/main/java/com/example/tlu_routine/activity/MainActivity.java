@@ -55,6 +55,10 @@ public class MainActivity extends AppCompatActivity {
                 bottomAppBar.setVisibility(View.GONE);
                 fabAdd.setVisibility(View.GONE);
             }
+            else if(destination.getId() == R.id.nav_statistics){
+                bottomAppBar.setVisibility(View.GONE);
+                fabAdd.setVisibility(View.GONE);
+            }
 
                 // Ẩn thanh điều hướng
             else {

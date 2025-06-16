@@ -79,12 +79,12 @@ public class StatisticFragment extends Fragment {
             tabPerformance.setBackgroundResource(R.drawable.tab_selected_background);
             tabPerformance.setTextColor(getResources().getColor(android.R.color.white));
             tabEvents.setBackgroundResource(R.drawable.tab_unselected_background);
-            tabEvents.setTextColor(getResources().getColor(R.color.default_text_color));
+            tabEvents.setTextColor(getResources().getColor(R.color.text_secondary));
         } else {
             tabEvents.setBackgroundResource(R.drawable.tab_selected_background);
             tabEvents.setTextColor(getResources().getColor(android.R.color.white));
             tabPerformance.setBackgroundResource(R.drawable.tab_unselected_background);
-            tabPerformance.setTextColor(getResources().getColor(R.color.default_text_color));
+            tabPerformance.setTextColor(getResources().getColor(R.color.text_secondary));
         }
     }
 
