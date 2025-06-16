@@ -62,17 +62,46 @@
                 android:id="@+id/chip_group_colors"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:chipSpacingHorizontal="8dp"
+                android:layout_marginTop="8dp"
+                app:chipSpacingHorizontal="4dp"
                 app:singleSelection="true"/>
 
-            <!-- Màu tùy chỉnh -->
-            <TextView
-                android:layout_width="wrap_content"
+            <!-- Custom Color Trigger Layout -->
+            <LinearLayout
+                android:id="@+id/custom_color_trigger_layout"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingVertical="8dp"
                 android:layout_marginTop="8dp"
-                android:text="@string/custom_color_label"
-                android:textStyle="bold" />
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackground">
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/custom_color_label"
+                    android:textStyle="bold" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/custom_color_preview"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    app:cardCornerRadius="8dp"
+                    app:cardElevation="0dp"
+                    app:strokeColor="@color/divider_color"
+                    app:strokeWidth="1dp"
+                    tools:cardBackgroundColor="@color/material_grey_600" />
+            </LinearLayout>
+
+            <!-- Custom Color Picker Card (initially gone) -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/custom_color_picker_card"
                 android:layout_width="match_parent"
@@ -151,16 +180,6 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chip_custom_color"
-                style="@style/Widget.MaterialComponents.Chip.Action"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/pick_a_color_button"
-                app:chipIcon="@drawable/ic_color_palette"
-                app:chipIconVisible="true"
-                android:layout_marginTop="4dp"/>
-
             <!-- Icon -->
             <TextView
                 android:layout_width="wrap_content"
@@ -173,8 +192,33 @@
                 android:id="@+id/chip_group_icons"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:chipSpacingHorizontal="8dp"
+                android:layout_marginTop="8dp"
+                app:chipSpacingHorizontal="4dp"
                 app:singleSelection="true"/>
+
+            <!-- FIXED: Custom Icon Section in one line -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/custom_icon_label"
+                    android:textStyle="bold" />
+
+                <!-- This container will hold the custom icon chip programmatically -->
+                <LinearLayout
+                    android:id="@+id/custom_icon_container"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:orientation="horizontal" />
+
+            </LinearLayout>
 
 
             <!-- Nút hành động chính -->

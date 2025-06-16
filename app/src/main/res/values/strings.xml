@@ -22,6 +22,7 @@
     <string name="select_custom_color_title">Chọn màu tùy chỉnh</string>
     <string name="select_button">Chọn</string>
     <string name="tag_icon_optional_label">Icon (tùy chọn):</string>
+    <string name="custom_icon_label">Icon tùy chỉnh:</string>
     <string name="save_tag_button">Lưu Thẻ</string>
     <string name="update_tag_button">Cập Nhật</string>
     <string name="cancel_button">Hủy Bỏ</string>
