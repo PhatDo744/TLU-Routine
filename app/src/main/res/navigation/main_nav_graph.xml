@@ -22,6 +22,24 @@
         android:label="Quản lý thẻ sự kiện"
         tools:layout="@layout/fragment_tag_manager" />
 
+    <fragment
+        android:id="@+id/fragment_notification"
+        android:name="com.example.tlu_routine.fragment.NotificationFragment"
+        android:label="fragment_notification"
+        tools:layout="@layout/fragment_notification" />
+
+    <fragment
+        android:id="@+id/fragment_notification_detail"
+        android:name="com.example.tlu_routine.fragment.NotificationDetailFragment"
+        android:label="fragment_notification_detail"
+        tools:layout="@layout/fragment_notification_detail" />
+
+    <fragment
+        android:id="@+id/fragment_notification_settings"
+        android:name="com.example.tlu_routine.fragment.NotificationSettingsFragment"
+        android:label="fragment_notification_settings"
+        tools:layout="@layout/fragment_notification_settings" />
+
     <!-- Destination cho dialog thêm/sửa thẻ -->
     <dialog
         android:id="@+id/addEditTagDialogFragment"

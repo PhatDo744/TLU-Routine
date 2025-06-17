@@ -22,7 +22,7 @@
             android:layout_height="?attr/actionBarSize"
             app:title="@string/home_toolbar_title_placeholder"
             app:titleTextColor="@android:color/black"
-            app:titleCentered="true"
+            app:titleCentered="false"
             app:navigationIcon="@drawable/ic_calendar_today"
             app:menu="@menu/home_toolbar_menu" />
 

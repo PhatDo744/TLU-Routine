@@ -10,6 +10,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import com.example.tlu_routine.R;
 import com.google.android.material.appbar.MaterialToolbar;
@@ -70,6 +72,8 @@ public class HomeFragment extends Fragment {
                 return true;
             } else if (itemId == R.id.action_settings) {
                 // Mở màn hình cài đặt
+                NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
+                navController.navigate(R.id.fragment_notification);
                 return true;
             }
             return false;
