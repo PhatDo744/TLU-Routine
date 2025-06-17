@@ -61,4 +61,10 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
+    <!-- Error Notification -->
+    <string name="error_title">Lỗi</string>
+    <string name="error_message">Vui lòng chọn khoảng thời gian khác.</string>
+    <string name="error_icon">Error Icon</string>
+    <string name="close_button">Close Button</string>
+
 </resources>

@@ -29,4 +29,19 @@
     <color name="success">#4CAF50</color>
     <color name="warning">#FF9800</color>
     <color name="error">#F44336</color>
+
+    <!-- Additional colors -->
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="error_background">#3F51B5</color>
+    <color name="error_background_end">#303F9F</color>
+    <color name="error_title_color">#FFFFFF</color>
+    <color name="error_message_color">#E8EAF6</color>
+    <color name="error_icon_color">#FF5722</color>
+    <color name="dark_gray">#424242</color>
+    <color name="background_light">#FAFAFA</color>
+    <color name="background_dark">#303030</color>
+
+    <color name="slate_gray">#6B7280</color>
 </resources>

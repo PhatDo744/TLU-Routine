@@ -60,6 +60,11 @@ public class MainActivity extends AppCompatActivity {
                 fabAdd.setVisibility(View.GONE);
             }
 
+            else if (destination.getId() == R.id.nav_host_fragment) {
+                bottomAppBar.setVisibility(View.VISIBLE);
+                fabAdd.setVisibility(View.VISIBLE);
+            }
+
                 // Ẩn thanh điều hướng
             else {
                 // Hiện thanh điều hướng trên các màn hình khác (Home, Stats,...)

@@ -21,14 +21,19 @@
             android:gravity="center_vertical"
             android:layout_marginBottom="24dp">
 
-            <ImageView
-                android:id="@+id/btn_back"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_arrow_back"
-                android:contentDescription="Back"
-                android:clickable="true"
-                android:focusable="true" />
+            <FrameLayout
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="?attr/selectableItemBackgroundBorderless">
+
+                <ImageView
+                    android:id="@+id/btn_back"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_arrow_back"
+                    android:contentDescription="Back" />
+            </FrameLayout>
 
             <TextView
                 android:layout_width="0dp"
@@ -75,77 +80,6 @@
 
         </LinearLayout>
 
-        <!-- Date Range -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:layout_marginBottom="24dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Hiệu suất"
-                android:textSize="16sp"
-                android:textColor="#000000"
-                android:textStyle="bold" />
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:layout_weight="1" />
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="từ"
-                    android:textSize="14sp"
-                    android:textColor="#757575"
-                    android:layout_marginEnd="8dp" />
-
-                <TextView
-                    android:id="@+id/tv_start_date"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="1/1/2025"
-                    android:textSize="14sp"
-                    android:textColor="#FFFFFF"
-                    android:background="@drawable/date_selector_background"
-                    android:padding="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:clickable="true"
-                    android:focusable="true" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="đến"
-                    android:textSize="14sp"
-                    android:textColor="#757575"
-                    android:layout_marginEnd="8dp" />
-
-                <TextView
-                    android:id="@+id/tv_end_date"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="1/5/2025"
-                    android:textSize="14sp"
-                    android:textColor="#FFFFFF"
-                    android:background="@drawable/date_selector_background"
-                    android:padding="8dp"
-                    android:clickable="true"
-                    android:focusable="true" />
-
-            </LinearLayout>
-
-        </LinearLayout>
-
         <!-- Progress Circle Card -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
@@ -159,14 +93,103 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="24dp"
-                android:gravity="center">
+                android:padding="24dp">
+
+                <!-- Date Range (moved inside) -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginBottom="24dp">
+
+                    <!-- Start date row - with "Hiệu suất" aligned with it -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="8dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Hiệu suất"
+                            android:textSize="16sp"
+                            android:textColor="#000000"
+                            android:textStyle="bold" />
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="1dp"
+                            android:layout_weight="1" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="từ"
+                            android:textSize="14sp"
+                            android:textColor="#757575"
+                            android:layout_marginEnd="8dp" />
+
+                        <TextView
+                            android:id="@+id/tv_start_date"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:minWidth="80dp"
+                            android:minHeight="38dp"
+                            android:text="1/1/2025"
+                            android:textSize="14sp"
+                            android:textColor="#FFFFFF"
+                            android:background="@drawable/date_selector_background"
+                            android:padding="8dp"
+                            android:gravity="center"
+                            android:clickable="true"
+                            android:focusable="true" />
+                    </LinearLayout>
+
+                    <!-- End date row -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="1dp"
+                            android:layout_weight="1" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="đến"
+                            android:textSize="14sp"
+                            android:textColor="#757575"
+                            android:layout_marginEnd="8dp" />
+
+                        <TextView
+                            android:id="@+id/tv_end_date"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:minWidth="80dp"
+                            android:minHeight="38dp"
+                            android:text="1/5/2025"
+                            android:textSize="14sp"
+                            android:textColor="#FFFFFF"
+                            android:background="@drawable/date_selector_background"
+                            android:padding="8dp"
+                            android:gravity="center"
+                            android:clickable="true"
+                            android:focusable="true" />
+                    </LinearLayout>
+                </LinearLayout>
 
                 <!-- Progress Circle -->
                 <FrameLayout
                     android:layout_width="200dp"
                     android:layout_height="200dp"
-                    android:layout_marginBottom="24dp">
+                    android:layout_marginBottom="24dp"
+                    android:layout_gravity="center">
 
                     <ProgressBar
                         android:id="@+id/progress_circle"
@@ -202,7 +225,6 @@
                             android:textColor="#757575" />
 
                     </LinearLayout>
-
                 </FrameLayout>
 
                 <!-- Statistics Row -->
@@ -260,11 +282,8 @@
                             android:textColor="#757575" />
 
                     </LinearLayout>
-
                 </LinearLayout>
-
             </LinearLayout>
-
         </androidx.cardview.widget.CardView>
 
         <!-- Weekly Activity Chart -->
