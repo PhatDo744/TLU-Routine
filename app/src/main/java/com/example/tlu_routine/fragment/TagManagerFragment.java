@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -28,6 +29,7 @@ public class TagManagerFragment extends Fragment {
     private RecyclerView recyclerView;
     private TagManagerAdapter adapter;
     private MaterialButton createTagButton;
+    private List<Tag> tagList;
 
     @Nullable
     @Override
@@ -39,34 +41,73 @@ public class TagManagerFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Ánh xạ View
+        bindViews(view);
+        setupToolbar();
+        setupRecyclerView();
+        setupListeners();
+        setupFragmentResultListeners();
+    }
+
+    private void bindViews(View view) {
         toolbar = view.findViewById(R.id.toolbar_tag_manager);
         recyclerView = view.findViewById(R.id.rv_tags);
         createTagButton = view.findViewById(R.id.btn_create_tag);
-
-        // Thiết lập Toolbar
-        setupToolbar();
-
-        // Thiết lập RecyclerView
-        setupRecyclerView();
-
-        // Thiết lập sự kiện cho nút tạo thẻ
-        createTagButton.setOnClickListener(v -> {
-            Navigation.findNavController(v).navigate(R.id.action_tagManagerFragment_to_addEditTagDialogFragment);
-        });
     }
 
     private void setupToolbar() {
-        // Lấy NavController và thiết lập sự kiện quay lại
         final NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
         toolbar.setNavigationOnClickListener(v -> navController.navigateUp());
     }
 
     private void setupRecyclerView() {
+        tagList = getSampleTags();
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        // Khởi tạo và thiết lập adapter với dữ liệu mẫu
-        adapter = new TagManagerAdapter(getContext(), getSampleTags());
+
+        adapter = new TagManagerAdapter(tagList, position -> {
+            // Hiển thị dialog xác nhận khi nhấn xóa
+            Tag tagToDelete = tagList.get(position);
+            Bundle bundle = new Bundle();
+            bundle.putString("tag_name", tagToDelete.getName());
+            bundle.putInt("tag_position", position);
+            Navigation.findNavController(requireView()).navigate(R.id.action_tagManagerFragment_to_deleteConfirmationDialogFragment, bundle);
+        });
+
         recyclerView.setAdapter(adapter);
+    }
+
+    private void setupListeners() {
+        createTagButton.setOnClickListener(v -> {
+            Navigation.findNavController(v).navigate(R.id.action_tagManagerFragment_to_addEditTagDialogFragment);
+        });
+    }
+
+    private void setupFragmentResultListeners() {
+        // Lắng nghe kết quả từ dialog Thêm/Sửa
+        getParentFragmentManager().setFragmentResultListener("tag_request", this, (requestKey, bundle) -> {
+            Tag resultTag = bundle.getParcelable("tag_result");
+            int position = bundle.getInt("tag_position", -1);
+
+            if (resultTag != null) {
+                if (position == -1) {
+                    tagList.add(resultTag);
+                    adapter.notifyItemInserted(tagList.size() - 1);
+                } else {
+                    tagList.set(position, resultTag);
+                    adapter.notifyItemChanged(position);
+                }
+            }
+        });
+
+        // Lắng nghe kết quả từ dialog Xóa
+        getParentFragmentManager().setFragmentResultListener("delete_request", this, (requestKey, bundle) -> {
+            int positionToDelete = bundle.getInt("position_to_delete", -1);
+            if (positionToDelete != -1) {
+                tagList.remove(positionToDelete);
+                adapter.notifyItemRemoved(positionToDelete);
+                adapter.notifyItemRangeChanged(positionToDelete, tagList.size());
+                Toast.makeText(getContext(), "Đã xóa thẻ", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private List<Tag> getSampleTags() {

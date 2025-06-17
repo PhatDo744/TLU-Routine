@@ -47,7 +47,7 @@ TLU-Routine/
 ## 🛠️ Hướng dẫn Cài đặt và Chạy thử
 1.  **Clone a repository này về máy của bạn:**
     ```bash
-    git clone [https://github.com/PhatDo744/TLU-Routine.git](https://github.com/PhatDo744/TLU-Routine.git)
+    git clone https://github.com/PhatDo744/TLU-Routine.git
     ```
 2.  Mở dự án bằng **Android Studio**.
 3.  Đợi cho Gradle build và đồng bộ hóa tất cả các thư viện cần thiết.

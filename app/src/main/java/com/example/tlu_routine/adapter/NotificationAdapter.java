@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,6 +23,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     public interface NotificationAdapterItem {}
 
     public static class NotificationItem implements NotificationAdapterItem {
+        public long id;
         public int iconRes;
         public String title;
         public String content;
@@ -29,8 +31,10 @@ public class NotificationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         public boolean isActive;
         public boolean isDotVisible;
         public int backgroundRes;
+        public boolean isSwiped;
 
-        public NotificationItem(int iconRes, String title, String content, String time, boolean isActive, boolean isDotVisible, int backgroundRes) {
+        public NotificationItem(long id, int iconRes, String title, String content, String time, boolean isActive, boolean isDotVisible, int backgroundRes) {
+            this.id = id;
             this.iconRes = iconRes;
             this.title = title;
             this.content = content;
@@ -38,6 +42,11 @@ public class NotificationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             this.isActive = isActive;
             this.isDotVisible = isDotVisible;
             this.backgroundRes = backgroundRes;
+            this.isSwiped = false;
+        }
+
+        public void setSwiped(boolean swiped) {
+            isSwiped = swiped;
         }
     }
 
@@ -52,6 +61,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private List<NotificationAdapterItem> items;
     private OnItemClickListener itemClickListener;
     private OnDeleteAllClickListener deleteAllClickListener;
+    private OnDeleteButtonClickListener deleteButtonClickListener;
 
     public interface OnItemClickListener {
         void onItemClick(NotificationItem item);
@@ -59,6 +69,10 @@ public class NotificationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     public interface OnDeleteAllClickListener {
         void onDeleteAllClick();
+    }
+
+    public interface OnDeleteButtonClickListener {
+        void onDeleteButtonClick(long notificationId, int adapterPosition);
     }
 
     public void setOnItemClickListener(OnItemClickListener listener) {
@@ -69,8 +83,27 @@ public class NotificationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         this.deleteAllClickListener = listener;
     }
 
+    public void setOnDeleteButtonClickListener(OnDeleteButtonClickListener listener) {
+        this.deleteButtonClickListener = listener;
+    }
+
     public NotificationAdapter(List<NotificationAdapterItem> items) {
         this.items = items;
+        setHasStableIds(true);
+    }
+
+    @Override
+    public long getItemId(int position) {
+        if (getItemViewType(position) == VIEW_TYPE_ITEM) {
+            return ((NotificationItem) items.get(position)).id;
+        } else if (getItemViewType(position) == VIEW_TYPE_HEADER) {
+            // Return a stable ID for headers. Using a negative value to avoid conflict with actual item IDs.
+            return RecyclerView.NO_ID - 1 - position; // Unique stable ID for each header based on its position
+        } else if (getItemViewType(position) == VIEW_TYPE_FOOTER) {
+            // Return a stable ID for the footer. Using a distinct negative value.
+            return RecyclerView.NO_ID - 2; // A single stable ID for the footer
+        }
+        return RecyclerView.NO_ID;
     }
 
     @Override
@@ -110,8 +143,23 @@ public class NotificationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             notificationHolder.tvTime.setText(item.time);
             notificationHolder.viewDot.setVisibility(item.isDotVisible ? View.VISIBLE : View.GONE);
             notificationHolder.itemView.setBackgroundResource(item.backgroundRes);
+
+            if (item.isSwiped) {
+                notificationHolder.deleteArea.setVisibility(View.VISIBLE);
+                notificationHolder.contentArea.setVisibility(View.GONE);
+            } else {
+                notificationHolder.deleteArea.setVisibility(View.GONE);
+                notificationHolder.contentArea.setVisibility(View.VISIBLE);
+            }
+
             notificationHolder.itemView.setOnClickListener(v -> {
                 if (itemClickListener != null) itemClickListener.onItemClick(item);
+            });
+
+            notificationHolder.btnDeleteSwipe.setOnClickListener(v -> {
+                if (deleteButtonClickListener != null) {
+                    deleteButtonClickListener.onDeleteButtonClick(item.id, position);
+                }
             });
         } else if (holder.getItemViewType() == VIEW_TYPE_HEADER) {
             HeaderViewHolder headerHolder = (HeaderViewHolder) holder;
@@ -135,10 +183,31 @@ public class NotificationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         notifyItemRemoved(position);
     }
 
+    public void setNotificationSwipedState(long notificationId, boolean isSwiped) {
+        int position = -1;
+        for (int i = 0; i < items.size(); i++) {
+            NotificationAdapterItem item = items.get(i);
+            if (item instanceof NotificationItem) {
+                NotificationItem notificationItem = (NotificationItem) item;
+                if (notificationItem.id == notificationId) {
+                    notificationItem.setSwiped(isSwiped);
+                    position = i;
+                    break;
+                }
+            }
+        }
+        if (position != -1) {
+            notifyItemChanged(position);
+        }
+    }
+
     public static class NotificationViewHolder extends RecyclerView.ViewHolder {
         ImageView imgIcon;
         TextView tvTitle, tvContent, tvTime;
         View viewDot;
+        public View contentArea;
+        public View deleteArea;
+        public ImageButton btnDeleteSwipe;
 
         public NotificationViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -147,6 +216,9 @@ public class NotificationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             tvContent = itemView.findViewById(R.id.tvContent);
             tvTime = itemView.findViewById(R.id.tvTime);
             viewDot = itemView.findViewById(R.id.viewDot);
+            contentArea = itemView.findViewById(R.id.content_area);
+            deleteArea = itemView.findViewById(R.id.delete_area);
+            btnDeleteSwipe = itemView.findViewById(R.id.btn_delete_swipe);
         }
     }
 

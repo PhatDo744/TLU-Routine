@@ -20,7 +20,14 @@
         android:id="@+id/nav_tags"
         android:name="com.example.tlu_routine.fragment.TagManagerFragment"
         android:label="Quản lý thẻ sự kiện"
-        tools:layout="@layout/fragment_tag_manager" />
+        tools:layout="@layout/fragment_tag_manager" >
+        <action
+            android:id="@+id/action_tagManagerFragment_to_addEditTagDialogFragment"
+            app:destination="@id/addEditTagDialogFragment" />
+        <action
+            android:id="@+id/action_tagManagerFragment_to_deleteConfirmationDialogFragment"
+            app:destination="@id/deleteConfirmationDialogFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/fragment_notification"
@@ -45,7 +52,30 @@
         android:id="@+id/addEditTagDialogFragment"
         android:name="com.example.tlu_routine.fragment.AddEditTagDialogFragment"
         android:label="dialog_add_edit_tag"
-        tools:layout="@layout/dialog_add_edit_tag" />
+        tools:layout="@layout/dialog_add_edit_tag" >
+        <argument
+            android:name="tag_to_edit"
+            app:argType="com.example.tlu_routine.model.Tag"
+            app:nullable="true"
+            android:defaultValue="@null" />
+        <argument
+            android:name="tag_position"
+            app:argType="integer"
+            android:defaultValue="-1" />
+    </dialog>
+
+    <dialog
+        android:id="@+id/deleteConfirmationDialogFragment"
+        android:name="com.example.tlu_routine.fragment.DeleteConfirmationDialogFragment"
+        android:label="dialog_delete_confirmation"
+        tools:layout="@layout/dialog_delete_confirmation" >
+        <argument
+            android:name="tag_name"
+            app:argType="string" />
+        <argument
+            android:name="tag_position"
+            app:argType="integer" />
+    </dialog>
 
     <action
         android:id="@+id/action_tagManagerFragment_to_addEditTagDialogFragment"

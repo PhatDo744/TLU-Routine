@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.graphics.drawable.DrawableCompat;
@@ -24,12 +23,17 @@ import java.util.List;
 
 public class TagManagerAdapter extends RecyclerView.Adapter<TagManagerAdapter.TagViewHolder> {
 
-    private final List<Tag> tagList;
-    private final Context context;
+    // Interface để xử lý sự kiện click
+    public interface OnTagActionClickListener {
+        void onDeleteClick(int position);
+    }
 
-    public TagManagerAdapter(Context context, List<Tag> tagList) {
-        this.context = context;
+    private final List<Tag> tagList;
+    private final OnTagActionClickListener listener;
+
+    public TagManagerAdapter(List<Tag> tagList, OnTagActionClickListener listener) {
         this.tagList = tagList;
+        this.listener = listener;
     }
 
     @NonNull
@@ -70,19 +74,24 @@ public class TagManagerAdapter extends RecyclerView.Adapter<TagManagerAdapter.Ta
             tagName.setText(tag.getName());
             tagIcon.setImageResource(tag.getIconResId());
 
-            // Đặt màu cho chấm màu
             Drawable unwrappedDrawable = tagColorDot.getBackground();
             Drawable wrappedDrawable = DrawableCompat.wrap(unwrappedDrawable);
             DrawableCompat.setTint(wrappedDrawable, Color.parseColor(tag.getColorHex()));
 
-
-            // Thiết lập sự kiện click
+            // Sự kiện click Sửa
             editButton.setOnClickListener(v -> {
                 Bundle bundle = new Bundle();
                 bundle.putParcelable("tag_to_edit", tag);
+                bundle.putInt("tag_position", getAdapterPosition()); // Gửi vị trí của thẻ
                 Navigation.findNavController(v).navigate(R.id.action_tagManagerFragment_to_addEditTagDialogFragment, bundle);
             });
-            deleteButton.setOnClickListener(v -> Toast.makeText(context, "Xóa: " + tag.getName(), Toast.LENGTH_SHORT).show());
+
+            // Sự kiện click Xóa
+            deleteButton.setOnClickListener(v -> {
+                if (listener != null) {
+                    listener.onDeleteClick(getAdapterPosition());
+                }
+            });
         }
     }
 }
