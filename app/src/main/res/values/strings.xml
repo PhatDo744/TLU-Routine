@@ -45,4 +45,5 @@
     <string name="delete_confirmation_message">Bạn có chắc muốn xóa thẻ "%1$s"?</string>
     <string name="delete_irreversible_note">Thao tác này không thể hoàn tác.</string>
     <string name="confirm_button">Xác Nhận</string>
+    <string name="error_icon">Biểu tượng cảnh báo lỗi</string>
 </resources>

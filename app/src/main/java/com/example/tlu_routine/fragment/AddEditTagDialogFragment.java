@@ -3,6 +3,8 @@ package com.example.tlu_routine.fragment;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,14 +26,19 @@ import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.skydoves.colorpickerview.ColorEnvelope;
 import com.skydoves.colorpickerview.ColorPickerView;
 import com.skydoves.colorpickerview.listeners.ColorEnvelopeListener;
 import com.skydoves.colorpickerview.sliders.BrightnessSlideBar;
 
+import java.util.ArrayList;
+import java.util.Locale;
+
 public class AddEditTagDialogFragment extends DialogFragment {
 
     private TextInputEditText etTagName;
+    private TextInputLayout tilTagName;
     private ChipGroup colorChipGroup;
     private ChipGroup iconChipGroup;
     private LinearLayout customColorTriggerLayout;
@@ -49,10 +56,15 @@ public class AddEditTagDialogFragment extends DialogFragment {
     private LinearLayout customIconContainer;
     private EmojiEditText etCustomIcon; // Emoji input for custom icon
 
+    private LinearLayout layoutTagNameError;
+    private TextView tvTagNameError;
+
     private String selectedColorHex = "#3B82F6"; // Default color
     private String selectedIconEmoji = "🏷️"; // Default emoji
     private Tag tagToEdit = null;
     private int tagPosition = -1;
+
+    private ArrayList<Tag> existingTags = new ArrayList<>();
 
     // Thêm mảng màu riêng cho chip màu
     private final String[] colorPalette = {
@@ -75,6 +87,9 @@ public class AddEditTagDialogFragment extends DialogFragment {
         if (getArguments() != null) {
             tagToEdit = getArguments().getParcelable("tag_to_edit");
             tagPosition = getArguments().getInt("tag_position", -1);
+            // Lấy danh sách tag hiện có từ arguments
+            existingTags = getArguments().getParcelableArrayList("existing_tags");
+            if (existingTags == null) existingTags = new ArrayList<>();
         }
         return inflater.inflate(R.layout.dialog_add_edit_tag, container, false);
     }
@@ -114,6 +129,9 @@ public class AddEditTagDialogFragment extends DialogFragment {
         selectCustomColorButton = view.findViewById(R.id.btn_select_custom_color);
         cancelCustomColorButton = view.findViewById(R.id.btn_cancel_custom_color);
         customIconContainer = view.findViewById(R.id.custom_icon_container);
+        tilTagName = view.findViewById(R.id.til_tag_name);
+        layoutTagNameError = view.findViewById(R.id.layout_tag_name_error);
+        tvTagNameError = view.findViewById(R.id.tv_tag_name_error);
 
         if (colorPickerView != null) {
             if (brightnessSlider != null) {
@@ -123,6 +141,28 @@ public class AddEditTagDialogFragment extends DialogFragment {
     }
 
     private void setupListeners() {
+        etTagName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // Xóa thông báo lỗi khi người dùng bắt đầu nhập
+                tilTagName.setError(null);
+                if (layoutTagNameError != null) layoutTagNameError.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
+
+        customColorTriggerLayout.setOnClickListener(v -> {
+            boolean isPickerVisible = customColorPickerCard.getVisibility() == View.VISIBLE;
+            customColorPickerCard.setVisibility(isPickerVisible ? View.GONE : View.VISIBLE);
+            if (!isPickerVisible) {
+                colorChipGroup.clearCheck();
+            }
+        });
         customColorTriggerLayout.setOnClickListener(v -> {
             boolean isPickerVisible = customColorPickerCard.getVisibility() == View.VISIBLE;
             customColorPickerCard.setVisibility(isPickerVisible ? View.GONE : View.VISIBLE);
@@ -162,12 +202,27 @@ public class AddEditTagDialogFragment extends DialogFragment {
         cancelButton.setOnClickListener(v -> dismiss());
     }
 
+    private void showTagNameError(String errorMsg) {
+        tilTagName.setError(null); // Không dùng lỗi mặc định
+        // Đổi màu viền sang đỏ khi có lỗi
+        tilTagName.setBoxStrokeColor(ContextCompat.getColor(requireContext(), R.color.delete_button_red));
+        if (layoutTagNameError != null && tvTagNameError != null) {
+            tvTagNameError.setText(errorMsg);
+            layoutTagNameError.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void hideTagNameError() {
+        if (layoutTagNameError != null) layoutTagNameError.setVisibility(View.GONE);
+        // Trả lại màu viền mặc định (xanh dương)
+        tilTagName.setBoxStrokeColor(ContextCompat.getColor(requireContext(), R.color.tag_button_blue));
+    }
+
     private void setupColorChips() {
         if (getContext() == null) return;
         colorChipGroup.removeAllViews();
         int size = (int) (45 * getResources().getDisplayMetrics().density);
 
-        // Sử dụng colorPalette thay vì emojiPalette
         for (String color : colorPalette) {
             Chip chip = new Chip(getContext());
             chip.setCheckable(true);
@@ -195,6 +250,8 @@ public class AddEditTagDialogFragment extends DialogFragment {
                     selectedColorHex = (String) buttonView.getTag();
                     customColorPickerCard.setVisibility(View.GONE);
                     updateCustomColorPreview(null);
+                    // Khi chọn màu preset, bo viền preview về mặc định (xám)
+                    setCustomColorPreviewStroke(false);
                 }
             });
             colorChipGroup.addView(chip);
@@ -306,6 +363,8 @@ public class AddEditTagDialogFragment extends DialogFragment {
                 if (colorToSelect.equalsIgnoreCase(chip.getTag().toString())) {
                     chip.setChecked(true); // ánh xạ vào chip tương ứng
                     isPresetColor = true;
+                    // Khi là màu preset, bo viền preview về mặc định (xám)
+                    setCustomColorPreviewStroke(false);
                     break;
                 }
             }
@@ -313,11 +372,14 @@ public class AddEditTagDialogFragment extends DialogFragment {
             if (!isPresetColor) {
                 colorChipGroup.clearCheck();
                 updateCustomColorPreview(colorToSelect);
+                // Khi là màu tùy chỉnh, bo viền preview thành xanh dương
+                setCustomColorPreviewStroke(true);
             }
         } else {
             // Nếu không có màu, mặc định là #3B82F6
             selectedColorHex = "#3B82F6";
             updateCustomColorPreview(selectedColorHex);
+            setCustomColorPreviewStroke(false);
         }
 
         String iconEmoji = tagToEdit.getIconEmoji();
@@ -350,8 +412,12 @@ public class AddEditTagDialogFragment extends DialogFragment {
             } catch (IllegalArgumentException e) {
                 customColorPreview.setCardBackgroundColor(ContextCompat.getColor(getContext(), R.color.material_grey_600));
             }
+            // Khi update preview với màu tùy chỉnh, bo viền xanh
+            setCustomColorPreviewStroke(true);
         } else {
             customColorPreview.setCardBackgroundColor(ContextCompat.getColor(getContext(), R.color.material_grey_600));
+            // Khi không có màu tùy chỉnh, bo viền xám
+            setCustomColorPreviewStroke(false);
         }
     }
 
@@ -412,11 +478,43 @@ public class AddEditTagDialogFragment extends DialogFragment {
         );
     }
 
+    private void setCustomColorPreviewStroke(boolean selected) {
+        if (getContext() == null) return;
+        if (selected) {
+            customColorPreview.setStrokeColor(ContextCompat.getColor(getContext(), R.color.tag_button_blue));
+            customColorPreview.setStrokeWidth((int) 4f); // Đậm hơn khi chọn
+        } else {
+            customColorPreview.setStrokeColor(ContextCompat.getColor(getContext(), R.color.divider_color));
+            customColorPreview.setStrokeWidth((int) 2f);
+        }
+    }
+
     private void saveTag() {
+        // Xóa lỗi cũ trước khi kiểm tra
+        tilTagName.setError(null);
+        hideTagNameError();
         String tagName = etTagName.getText().toString().trim();
+
+        // 1. Kiểm tra rỗng
         if (tagName.isEmpty()) {
-            etTagName.setError("Tên thẻ không được để trống");
+            showTagNameError("Vui lòng nhập tên thẻ");
+            etTagName.requestFocus();
             return;
+        }
+
+        // 2. Kiểm tra trùng tên (không phân biệt hoa thường, bỏ qua chính nó khi sửa)
+        for (int i = 0; i < existingTags.size(); i++) {
+            Tag tag = existingTags.get(i);
+            // Nếu đang ở chế độ sửa, bỏ qua tag tại vị trí ban đầu của nó
+            if (tagToEdit != null && i == tagPosition) {
+                continue;
+            }
+            // Kiểm tra trùng tên
+            if (tagName.equalsIgnoreCase(tag.getName())) {
+                showTagNameError("Tên thẻ này đã tồn tại. Vui lòng chọn tên khác");
+                etTagName.requestFocus();
+                return;
+            }
         }
 
         String iconEmoji = null;

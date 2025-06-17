@@ -63,21 +63,46 @@ public class TagManagerFragment extends Fragment {
         tagList = getSampleTags();
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        adapter = new TagManagerAdapter(tagList, position -> {
-            // Hiển thị dialog xác nhận khi nhấn xóa
-            Tag tagToDelete = tagList.get(position);
-            Bundle bundle = new Bundle();
-            bundle.putString("tag_name", tagToDelete.getName());
-            bundle.putInt("tag_position", position);
-            Navigation.findNavController(requireView()).navigate(R.id.action_tagManagerFragment_to_deleteConfirmationDialogFragment, bundle);
-        });
+        // ✅ KHỞI TẠO ADAPTER VỚI CÁC LISTENER ĐÚNG CHUẨN
+        adapter = new TagManagerAdapter(
+                tagList,
+                // 1. Listener cho sự kiện Sửa
+                (tagToEdit, position) -> {
+                    // `tagToEdit` ở đây là một đối tượng Tag (Parcelable), không còn là int nữa
+                    Bundle bundle = new Bundle();
+                    // Gửi toàn bộ danh sách để dialog có thể kiểm tra trùng lặp
+                    bundle.putParcelableArrayList("existing_tags", new ArrayList<>(tagList));
+                    // Gửi tag cần sửa và vị trí của nó
+                    bundle.putParcelable("tag_to_edit", tagToEdit); // <-- Lỗi đã được sửa
+                    bundle.putInt("tag_position", position);
+
+                    // Dùng recyclerView để tìm NavController một cách an toàn
+                    Navigation.findNavController(recyclerView).navigate(R.id.action_tagManagerFragment_to_addEditTagDialogFragment, bundle);
+                },
+                // 2. Listener cho sự kiện Xóa
+                position -> {
+                    Tag tagToDelete = tagList.get(position);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("tag_name", tagToDelete.getName());
+                    bundle.putInt("tag_position", position);
+                    // Dùng recyclerView để tìm NavController một cách an toàn
+                    Navigation.findNavController(recyclerView).navigate(R.id.action_tagManagerFragment_to_deleteConfirmationDialogFragment, bundle);
+                }
+        );
 
         recyclerView.setAdapter(adapter);
     }
 
     private void setupListeners() {
         createTagButton.setOnClickListener(v -> {
-            Navigation.findNavController(v).navigate(R.id.action_tagManagerFragment_to_addEditTagDialogFragment);
+            // Tạo một Bundle để chứa dữ liệu
+            Bundle bundle = new Bundle();
+
+            // Gửi danh sách tag hiện tại vào bundle khi tạo mới
+            bundle.putParcelableArrayList("existing_tags", new ArrayList<>(tagList));
+
+            // Điều hướng đến dialog và gửi kèm bundle
+            Navigation.findNavController(v).navigate(R.id.action_tagManagerFragment_to_addEditTagDialogFragment, bundle);
         });
     }
 
@@ -88,10 +113,10 @@ public class TagManagerFragment extends Fragment {
             int position = bundle.getInt("tag_position", -1);
 
             if (resultTag != null) {
-                if (position == -1) {
+                if (position == -1) { // Thêm mới
                     tagList.add(resultTag);
                     adapter.notifyItemInserted(tagList.size() - 1);
-                } else {
+                } else { // Cập nhật
                     tagList.set(position, resultTag);
                     adapter.notifyItemChanged(position);
                 }

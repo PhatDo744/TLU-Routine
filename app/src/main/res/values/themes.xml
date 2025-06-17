@@ -6,4 +6,8 @@
     </style>
 
     <style name="Theme.TLURoutine" parent="Base.Theme.TLURoutine" />
+    <style name="TextInputLayout.TagName.ErrorStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="errorIconDrawable">@drawable/ic_error_outline</item>
+        <item name="endIconMode">none</item>
+    </style>
 </resources>
