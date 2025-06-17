@@ -112,10 +112,10 @@ public class TagManagerFragment extends Fragment {
 
     private List<Tag> getSampleTags() {
         List<Tag> tags = new ArrayList<>();
-        tags.add(new Tag("Học tập", "#4CAF50", R.drawable.ic_book));
-        tags.add(new Tag("Công việc gấp", "#F44336", R.drawable.ic_briefcase));
-        tags.add(new Tag("Cá nhân", "#9C27B0", R.drawable.ic_person));
-        tags.add(new Tag("Thi cuối kỳ HK2 Năm 3", "#FFC107", R.drawable.ic_trophy));
+        tags.add(new Tag("Học tập", "#4CAF50", "📚"));
+        tags.add(new Tag("Công việc gấp", "#F44336", "💼"));
+        tags.add(new Tag("Cá nhân", "#9C27B0", "🤸"));
+        tags.add(new Tag("Thi cuối kỳ HK2 Năm 3", "#FFC107", "🏆"));
         return tags;
     }
 }

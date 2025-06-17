@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -56,7 +55,7 @@ public class TagManagerAdapter extends RecyclerView.Adapter<TagManagerAdapter.Ta
 
     class TagViewHolder extends RecyclerView.ViewHolder {
         private final View tagColorDot;
-        private final ImageView tagIcon;
+        private final TextView tagIcon; // Đổi từ ImageView sang TextView
         private final TextView tagName;
         private final ImageButton editButton;
         private final ImageButton deleteButton;
@@ -64,7 +63,7 @@ public class TagManagerAdapter extends RecyclerView.Adapter<TagManagerAdapter.Ta
         public TagViewHolder(@NonNull View itemView) {
             super(itemView);
             tagColorDot = itemView.findViewById(R.id.tag_color_dot);
-            tagIcon = itemView.findViewById(R.id.tag_icon);
+            tagIcon = itemView.findViewById(R.id.tag_icon); // Đảm bảo layout là TextView
             tagName = itemView.findViewById(R.id.tag_name);
             editButton = itemView.findViewById(R.id.btn_edit_tag);
             deleteButton = itemView.findViewById(R.id.btn_delete_tag);
@@ -72,7 +71,13 @@ public class TagManagerAdapter extends RecyclerView.Adapter<TagManagerAdapter.Ta
 
         public void bind(final Tag tag) {
             tagName.setText(tag.getName());
-            tagIcon.setImageResource(tag.getIconResId());
+            // Hiển thị emoji nếu có, nếu không fallback về icon drawable
+            if (tag.getIconEmoji() != null && !tag.getIconEmoji().isEmpty()) {
+                tagIcon.setText(tag.getIconEmoji());
+                tagIcon.setVisibility(View.VISIBLE);
+            } else {
+                tagIcon.setText(""); // hoặc có thể để icon mặc định nếu muốn
+            }
 
             Drawable unwrappedDrawable = tagColorDot.getBackground();
             Drawable wrappedDrawable = DrawableCompat.wrap(unwrappedDrawable);

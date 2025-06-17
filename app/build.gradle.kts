@@ -43,4 +43,7 @@ dependencies {
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
     implementation("com.github.skydoves:colorpickerview:2.2.4")
+    implementation("androidx.emoji2:emoji2:1.5.0")
+    implementation("androidx.emoji2:emoji2-views:1.5.0")
+    implementation("androidx.emoji2:emoji2-views-helper:1.4.0")
 }

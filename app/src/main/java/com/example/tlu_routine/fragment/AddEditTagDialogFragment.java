@@ -3,6 +3,7 @@ package com.example.tlu_routine.fragment;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
+import androidx.emoji2.widget.EmojiEditText;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.tlu_routine.R;
@@ -25,7 +27,6 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.skydoves.colorpickerview.ColorEnvelope;
 import com.skydoves.colorpickerview.ColorPickerView;
 import com.skydoves.colorpickerview.listeners.ColorEnvelopeListener;
-import com.skydoves.colorpickerview.sliders.AlphaSlideBar;
 import com.skydoves.colorpickerview.sliders.BrightnessSlideBar;
 
 public class AddEditTagDialogFragment extends DialogFragment {
@@ -46,16 +47,27 @@ public class AddEditTagDialogFragment extends DialogFragment {
     private MaterialButton cancelCustomColorButton;
 
     private LinearLayout customIconContainer;
-    private Chip chipCustomIcon;
+    private EmojiEditText etCustomIcon; // Emoji input for custom icon
 
     private String selectedColorHex = "#3B82F6"; // Default color
-    private int selectedIconRes = R.drawable.ic_book; // Default icon
+    private String selectedIconEmoji = "🏷️"; // Default emoji
     private Tag tagToEdit = null;
     private int tagPosition = -1;
 
-    private final int customIconResId = R.drawable.ic_tag;
-    private final String[] colorPalette = {"#EF4444", "#F97316", "#F59E0B", "#84CC16", "#22C55E", "#10B981", "#06B6D4", "#3B82F6", "#8B5CF6", "#EC4899"};
-    private final int[] iconPalette = {R.drawable.ic_book, R.drawable.ic_briefcase, R.drawable.ic_person, R.drawable.ic_trophy, R.drawable.ic_lightbulb, R.drawable.ic_calendar_day, R.drawable.ic_money, R.drawable.ic_laptop, R.drawable.ic_target};
+    // Thêm mảng màu riêng cho chip màu
+    private final String[] colorPalette = {
+        "#3B82F6", // blue
+        "#F59E42", // orange
+        "#F43F5E", // pink
+        "#22C55E", // green
+        "#A855F7", // purple
+        "#FACC15", // yellow
+        "#0EA5E9", // sky
+        "#64748B", // slate
+        "#EF4444"  // red
+    };
+
+    private final String[] emojiPalette = { "📚", "💼", "🤸", "🏆", "🎉", "💡", "📅", "💰", "💻", "🎯"};
 
     @Nullable
     @Override
@@ -74,12 +86,14 @@ public class AddEditTagDialogFragment extends DialogFragment {
         setupListeners();
         setupColorChips();
         setupIconChips();
-        setupCustomIconChip();
+        setupCustomIconInput();
 
         if (tagToEdit != null) {
             populateUiForEditMode();
         } else {
-            updateCustomColorPreview(null);
+            // Luôn mặc định màu custom là #3B82F6 khi thêm mới
+            selectedColorHex = "#3B82F6";
+            updateCustomColorPreview(selectedColorHex);
         }
     }
 
@@ -101,7 +115,6 @@ public class AddEditTagDialogFragment extends DialogFragment {
         cancelCustomColorButton = view.findViewById(R.id.btn_cancel_custom_color);
         customIconContainer = view.findViewById(R.id.custom_icon_container);
 
-
         if (colorPickerView != null) {
             if (brightnessSlider != null) {
                 colorPickerView.attachBrightnessSlider(brightnessSlider);
@@ -122,7 +135,7 @@ public class AddEditTagDialogFragment extends DialogFragment {
             colorPickerView.setColorListener(new ColorEnvelopeListener() {
                 @Override
                 public void onColorSelected(ColorEnvelope envelope, boolean fromUser) {
-                    if(envelope != null) {
+                    if (envelope != null) {
                         updateHexDisplay(envelope.getColor(), "#" + envelope.getHexCode());
                     }
                 }
@@ -139,7 +152,7 @@ public class AddEditTagDialogFragment extends DialogFragment {
 
         cancelCustomColorButton.setOnClickListener(v -> {
             customColorPickerCard.setVisibility(View.GONE);
-            if(colorChipGroup.getCheckedChipId() == -1){
+            if (colorChipGroup.getCheckedChipId() == -1) {
                 selectedColorHex = null;
                 updateCustomColorPreview(null);
             }
@@ -152,8 +165,9 @@ public class AddEditTagDialogFragment extends DialogFragment {
     private void setupColorChips() {
         if (getContext() == null) return;
         colorChipGroup.removeAllViews();
-        int size = (int) (40 * getResources().getDisplayMetrics().density);
+        int size = (int) (45 * getResources().getDisplayMetrics().density);
 
+        // Sử dụng colorPalette thay vì emojiPalette
         for (String color : colorPalette) {
             Chip chip = new Chip(getContext());
             chip.setCheckable(true);
@@ -191,69 +205,91 @@ public class AddEditTagDialogFragment extends DialogFragment {
         if (getContext() == null) return;
         iconChipGroup.removeAllViews();
 
-        for (int iconRes : iconPalette) {
-            Chip chip = createIconChip(iconRes);
+        for (String emoji : emojiPalette) {
+            Chip chip = createEmojiChip(emoji);
             chip.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                if (isChecked && chipCustomIcon != null) {
-                    chipCustomIcon.setChecked(false);
+                if (isChecked && etCustomIcon != null) {
+                    etCustomIcon.setText("");
                 }
             });
             iconChipGroup.addView(chip);
         }
     }
 
-    private void setupCustomIconChip() {
-        if (getContext() == null) return;
-        customIconContainer.removeAllViews();
-        chipCustomIcon = createIconChip(customIconResId);
-        chipCustomIcon.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isChecked) {
-                iconChipGroup.clearCheck();
-            }
-        });
-        customIconContainer.addView(chipCustomIcon);
-    }
-
-    private Chip createIconChip(int iconRes) {
+    private Chip createEmojiChip(String emoji) {
         if (getContext() == null) return new Chip(getContext());
 
-        float chipSizePx = 36f * getResources().getDisplayMetrics().density;
-        float iconSizePx = 20f * getResources().getDisplayMetrics().density;
-        float cornerRadiusPx = 8f * getResources().getDisplayMetrics().density;
-        float strokeWidthPx = 1.5f * getResources().getDisplayMetrics().density;
+        // Kích thước vuông cho chip
+        int chipSizePx = (int) (44 * getResources().getDisplayMetrics().density);
 
         Chip chip = new Chip(getContext());
         chip.setCheckable(true);
 
-        try {
-            chip.setChipIconResource(iconRes);
-        } catch (Exception e) {
-            chip.setChipIcon(null);
-        }
+        chip.setText(emoji);
+        chip.setTextSize(22); // Vừa với ô vuông
+        chip.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        chip.setGravity(Gravity.CENTER);
+
+        // Corner radius 8dp
+        chip.setChipCornerRadius(8f * getResources().getDisplayMetrics().density);
+
+        // Padding nhỏ để emoji nằm giữa
+        chip.setChipStartPadding(0f);
+        chip.setChipEndPadding(0f);
+        chip.setPadding(0, 0, 0, 0);
+
+        // Đặt kích thước vuông
+        chip.setChipMinHeight(chipSizePx);
+        chip.setMinWidth(chipSizePx);
+        chip.setMaxWidth(chipSizePx);
+        chip.setEnsureMinTouchTargetSize(false);
 
         chip.setChipBackgroundColor(createIconChipBackgroundList());
         chip.setChipStrokeColor(createIconChipStrokeList());
-        chip.setChipIconTint(createIconChipTintList());
-        chip.setChipStrokeWidth(strokeWidthPx);
+        chip.setChipStrokeWidth(1.5f * getResources().getDisplayMetrics().density);
 
-        chip.setText(null);
-        chip.setChipIconSize(iconSizePx);
-        chip.setChipCornerRadius(cornerRadiusPx);
-        chip.setEnsureMinTouchTargetSize(false);
-
-        ViewGroup.LayoutParams params = chip.getLayoutParams();
-        if (params == null) {
-            params = new ViewGroup.LayoutParams((int) chipSizePx, (int) chipSizePx);
-        } else {
-            params.width = (int) chipSizePx;
-            params.height = (int) chipSizePx;
-        }
-        chip.setLayoutParams(params);
-
-        chip.setTag(iconRes);
+        chip.setTag(emoji);
         return chip;
     }
 
+    private void setupCustomIconInput() {
+        if (getContext() == null) return;
+        customIconContainer.removeAllViews();
+
+        int boxSizePx = (int) (44 * getResources().getDisplayMetrics().density);
+
+        etCustomIcon = new EmojiEditText(getContext());
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(boxSizePx, boxSizePx);
+        etCustomIcon.setLayoutParams(params);
+        etCustomIcon.setTextSize(22);
+        etCustomIcon.setGravity(Gravity.CENTER);
+        etCustomIcon.setPadding(0, 0, 0, 0);
+        etCustomIcon.setBackgroundResource(R.drawable.bg_square_icon_edittext);
+        etCustomIcon.setMaxLines(1);
+        etCustomIcon.setHint("🏷️");
+        etCustomIcon.setSingleLine(true);
+
+        etCustomIcon.setOnFocusChangeListener((v, hasFocus) -> {
+            if (hasFocus) {
+                iconChipGroup.clearCheck();
+            }
+        });
+
+        etCustomIcon.addTextChangedListener(new android.text.TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (etCustomIcon.hasFocus() && s.length() > 0) {
+                    iconChipGroup.clearCheck();
+                }
+            }
+            @Override
+            public void afterTextChanged(android.text.Editable s) {}
+        });
+
+        customIconContainer.addView(etCustomIcon);
+    }
 
     private void populateUiForEditMode() {
         tvDialogTitle.setText(R.string.dialog_edit_tag_title);
@@ -264,35 +300,45 @@ public class AddEditTagDialogFragment extends DialogFragment {
         boolean isPresetColor = false;
         if (colorToSelect != null) {
             selectedColorHex = colorToSelect;
+            // Kiểm tra xem màu có nằm trong colorPalette không
             for (int i = 0; i < colorChipGroup.getChildCount(); i++) {
                 Chip chip = (Chip) colorChipGroup.getChildAt(i);
                 if (colorToSelect.equalsIgnoreCase(chip.getTag().toString())) {
-                    chip.setChecked(true);
+                    chip.setChecked(true); // ánh xạ vào chip tương ứng
                     isPresetColor = true;
                     break;
                 }
             }
+            // Nếu không phải màu preset thì mới update vào ô màu tùy chỉnh
             if (!isPresetColor) {
+                colorChipGroup.clearCheck();
                 updateCustomColorPreview(colorToSelect);
             }
         } else {
-            updateCustomColorPreview(null);
+            // Nếu không có màu, mặc định là #3B82F6
+            selectedColorHex = "#3B82F6";
+            updateCustomColorPreview(selectedColorHex);
         }
 
-        int iconToSelect = tagToEdit.getIconResId();
-        if (iconToSelect != -1) {
-            selectedIconRes = iconToSelect;
-            if (iconToSelect == customIconResId) {
-                chipCustomIcon.setChecked(true);
-            } else {
-                for (int i = 0; i < iconChipGroup.getChildCount(); i++) {
-                    Chip chip = (Chip) iconChipGroup.getChildAt(i);
-                    if (chip.getTag() != null && iconToSelect == (int) chip.getTag()) {
-                        chip.setChecked(true);
-                        break;
-                    }
+        String iconEmoji = tagToEdit.getIconEmoji();
+        if (iconEmoji != null && !iconEmoji.isEmpty()) {
+            selectedIconEmoji = iconEmoji;
+            boolean found = false;
+            for (int i = 0; i < iconChipGroup.getChildCount(); i++) {
+                Chip chip = (Chip) iconChipGroup.getChildAt(i);
+                if (chip.getTag() != null && iconEmoji.equals(chip.getTag())) {
+                    chip.setChecked(true);
+                    found = true;
+                    break;
                 }
             }
+            // Nếu không tìm thấy trong emojiPalette thì set vào custom icon
+            if (!found && etCustomIcon != null) {
+                etCustomIcon.setText(iconEmoji);
+            }
+        } else if (etCustomIcon != null) {
+            // Nếu không có iconEmoji thì set emoji mặc định
+            etCustomIcon.setText("🏷️");
         }
     }
 
@@ -366,20 +412,6 @@ public class AddEditTagDialogFragment extends DialogFragment {
         );
     }
 
-    private ColorStateList createIconChipTintList() {
-        if (getContext() == null) return null;
-        return new ColorStateList(
-                new int[][]{
-                        new int[]{android.R.attr.state_checked},
-                        new int[]{}
-                },
-                new int[]{
-                        ContextCompat.getColor(requireContext(), R.color.icon_chip_stroke_selected),
-                        ContextCompat.getColor(requireContext(), R.color.default_text_color)
-                }
-        );
-    }
-
     private void saveTag() {
         String tagName = etTagName.getText().toString().trim();
         if (tagName.isEmpty()) {
@@ -387,18 +419,24 @@ public class AddEditTagDialogFragment extends DialogFragment {
             return;
         }
 
+        String iconEmoji = null;
         int checkedIconId = iconChipGroup.getCheckedChipId();
         if (checkedIconId != View.NO_ID) {
             Chip checkedChip = iconChipGroup.findViewById(checkedIconId);
             if (checkedChip != null) {
-                selectedIconRes = (int) checkedChip.getTag();
+                iconEmoji = (String) checkedChip.getTag();
             }
-        } else if (chipCustomIcon != null && chipCustomIcon.isChecked()) {
-            selectedIconRes = (int) chipCustomIcon.getTag();
+        } else if (etCustomIcon != null && etCustomIcon.getText() != null && !etCustomIcon.getText().toString().trim().isEmpty()) {
+            iconEmoji = etCustomIcon.getText().toString().trim();
+        }
+
+        // Nếu iconEmoji vẫn rỗng thì fallback về emoji mặc định
+        if (iconEmoji == null || iconEmoji.isEmpty()) {
+            iconEmoji = "🏷️";
         }
 
         // Tạo đối tượng Tag mới với dữ liệu đã chọn
-        Tag resultTag = new Tag(tagName, selectedColorHex, selectedIconRes);
+        Tag resultTag = new Tag(tagName, selectedColorHex, iconEmoji);
 
         // Gửi kết quả trở lại Fragment cha
         Bundle result = new Bundle();
@@ -413,7 +451,11 @@ public class AddEditTagDialogFragment extends DialogFragment {
     public void onStart() {
         super.onStart();
         if (getDialog() != null && getDialog().getWindow() != null) {
-            getDialog().getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            int width = getResources().getDisplayMetrics().widthPixels - (int)(32 * getResources().getDisplayMetrics().density); // 16dp mỗi bên
+            getDialog().getWindow().setLayout(width, ViewGroup.LayoutParams.WRAP_CONTENT);
+
+            // ✅ Bo góc cho dialog window
+            getDialog().getWindow().setBackgroundDrawableResource(R.drawable.dialog_background);
         }
     }
 }

@@ -41,8 +41,8 @@ public class DeleteConfirmationDialogFragment extends DialogFragment {
         MaterialButton confirmButton = view.findViewById(R.id.btn_confirm_delete);
         MaterialButton cancelButton = view.findViewById(R.id.btn_cancel_delete);
 
-        // Hiển thị thông điệp xóa với tên thẻ
-        String message = getString(R.string.delete_confirmation_message, tagName);
+        // Hiển thị thông điệp xóa với tên thẻ có dấu ngoặc kép
+        String message = getString(R.string.delete_confirmation_message, "\"" + tagName + "\"");
         messageView.setText(message);
 
         // Sự kiện click nút xác nhận
@@ -61,7 +61,11 @@ public class DeleteConfirmationDialogFragment extends DialogFragment {
     public void onStart() {
         super.onStart();
         if (getDialog() != null && getDialog().getWindow() != null) {
-            getDialog().getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            int width = getResources().getDisplayMetrics().widthPixels - (int)(32 * getResources().getDisplayMetrics().density); // 16dp mỗi bên
+            getDialog().getWindow().setLayout(width, ViewGroup.LayoutParams.WRAP_CONTENT);
+
+            // ✅ Bo góc cho dialog window
+            getDialog().getWindow().setBackgroundDrawableResource(R.drawable.dialog_background);
         }
     }
 }

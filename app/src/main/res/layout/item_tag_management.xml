@@ -29,15 +29,17 @@
             tools:backgroundTint="@android:color/holo_green_dark" />
 
         <!-- Biểu tượng của thẻ -->
-        <ImageView
+        <TextView
             android:id="@+id/tag_icon"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_marginStart="12dp"
+            android:gravity="center"
+            android:textSize="18sp"
             app:layout_constraintStart_toEndOf="@id/tag_color_dot"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            tools:src="@drawable/ic_book"
+            tools:text="📚"
             android:contentDescription="@null" />
 
         <!-- Tên thẻ -->
@@ -55,7 +57,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             tools:text="Học tập" />
 
-        <!-- Nút xóa -->
+        <!-- Nút x��a -->
         <ImageButton
             android:id="@+id/btn_delete_tag"
             android:layout_width="40dp"

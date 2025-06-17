@@ -3,9 +3,89 @@
     android:width="24dp"
     android:height="24dp"
     android:viewportWidth="24"
-    android:viewportHeight="24"
-    android:tint="#000000">
+    android:viewportHeight="24">
+
+    <!-- Thân cặp chính (màu nâu nhạt) -->
     <path
-        android:fillColor="@android:color/white"
-        android:pathData="M10,2H14C15.1,2 16,2.9 16,4V6H20C21.1,6 22,6.9 22,8V19C22,20.1 21.1,21 20,21H4C2.9,21 2,20.1 2,19V8C2,6.9 2.9,6 4,6H8V4C8,2.9 8.9,2 10,2ZM14,6V4H10V6H14Z"/>
+        android:pathData="M4,9 L20,9 L20,18 L4,18 Z"
+        android:fillColor="#D2B48C" />
+
+    <!-- Nắp cặp (màu nâu đậm hơn) -->
+    <path
+        android:pathData="M4,9 L20,9 Q20,8.5 19.5,8.5 L4.5,8.5 Q4,8.5 4,9 Z"
+        android:fillColor="#CD853F" />
+
+    <!-- Dây đai ngang ở giữa (màu nâu đậm) -->
+    <path
+        android:pathData="M4,12.5 L20,12.5 L20,14 L4,14 Z"
+        android:fillColor="#8B4513" />
+
+    <!-- Tay cầm trên -->
+    <path
+        android:pathData="M10,6 L10,8.5 M14,6 L14,8.5"
+        android:strokeColor="#8B4513"
+        android:strokeWidth="1.5"
+        android:strokeLineCap="round" />
+
+    <!-- Phần nối tay cầm -->
+    <path
+        android:pathData="M10,6 Q12,5.5 14,6"
+        android:strokeColor="#8B4513"
+        android:strokeWidth="1.5"
+        android:fillColor="@android:color/transparent" />
+
+    <!-- Khóa cặp (hình chữ nhật bạc) -->
+    <path
+        android:pathData="M11,15 L13,15 L13,16.5 L11,16.5 Z"
+        android:fillColor="#C0C0C0" />
+
+    <!-- Nút bấm khóa -->
+    <path
+        android:pathData="M11.5,15.2 L12.5,15.2 L12.5,15.8 L11.5,15.8 Z"
+        android:fillColor="#FFFFFF" />
+
+    <!-- Viền thân cặp -->
+    <path
+        android:pathData="M4,9 L20,9 L20,18 L4,18 Z"
+        android:strokeColor="#8B4513"
+        android:strokeWidth="0.5"
+        android:fillColor="@android:color/transparent" />
+
+    <!-- Viền nắp cặp -->
+    <path
+        android:pathData="M4,9 L20,9"
+        android:strokeColor="#A0522D"
+        android:strokeWidth="0.3" />
+
+    <!-- Các góc bo tròn -->
+    <path
+        android:pathData="M4,18 Q4,18.5 4.5,18.5 L5,18.5 M19,18.5 L19.5,18.5 Q20,18.5 20,18"
+        android:strokeColor="#8B4513"
+        android:strokeWidth="0.3"
+        android:fillColor="@android:color/transparent" />
+
+    <!-- Đường may/nối -->
+    <path
+        android:pathData="M5,10 L19,10 M5,17 L19,17"
+        android:strokeColor="#A0522D"
+        android:strokeWidth="0.2" />
+
+    <!-- Hiệu ứng ánh sáng -->
+    <path
+        android:pathData="M5,9.5 L6,9.5 L6,17.5 L5,17.5 Z"
+        android:fillColor="#FFFFFF"
+        android:fillAlpha="0.15" />
+
+    <!-- Gradient shadow phía dưới nắp -->
+    <path
+        android:pathData="M4,9 L20,9 L20,10 L4,10 Z"
+        android:fillColor="#000000"
+        android:fillAlpha="0.1" />
+
+    <!-- Bóng đổ -->
+    <path
+        android:pathData="M4,18.5 L20,18.5 Q20.5,18.5 20.5,19 L20.5,19.5 Q20.5,20 20,20 L4,20 Q3.5,20 3.5,19.5 L3.5,19 Q3.5,18.5 4,18.5 Z"
+        android:fillColor="#000000"
+        android:fillAlpha="0.15" />
+
 </vector>

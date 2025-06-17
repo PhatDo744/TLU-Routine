@@ -7,18 +7,22 @@
     app:cardBackgroundColor="@color/white"
     app:cardCornerRadius="24dp"
     app:cardElevation="8dp"
+    app:strokeColor="#E5E7EB"
+    app:strokeWidth="1.5dp"
     android:layout_margin="16dp">
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:scrollbars="none">
+        android:scrollbars="none"
+        android:background="@color/white">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="24dp">
+            android:padding="24dp"
+            android:background="@color/white">
 
             <TextView
                 android:id="@+id/tv_dialog_title"
@@ -26,7 +30,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:text="@string/dialog_create_tag_title"
-                android:textColor="@color/black"
+                android:textColor="#374151"
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
@@ -36,18 +40,23 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:text="@string/tag_name_required_label"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:textColor="#374151" />
 
             <com.google.android.material.textfield.TextInputLayout
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp">
+                android:layout_marginTop="4dp"
+                app:boxStrokeColor="#3B82F6"
+                app:hintTextColor="#3B82F6"
+                app:cursorColor="#3B82F6">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/et_tag_name"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:textColor="#4B5563" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <!-- Màu sắc có sẵn -->
@@ -56,15 +65,17 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:text="@string/tag_color_optional_label"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:textColor="#374151" />
 
             <com.google.android.material.chip.ChipGroup
                 android:id="@+id/chip_group_colors"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                app:chipSpacingHorizontal="4dp"
-                app:singleSelection="true"/>
+                android:layout_marginTop="4dp"
+                app:chipSpacingVertical="8dp"
+                app:singleSelection="true"
+                android:background="@color/white"/>
 
             <!-- Custom Color Trigger Layout -->
             <LinearLayout
@@ -83,21 +94,19 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/custom_color_label"
-                    android:textStyle="bold" />
-
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_weight="1" />
+                    android:textStyle="bold"
+                    android:textColor="#374151" />
 
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/custom_color_preview"
                     android:layout_width="36dp"
                     android:layout_height="36dp"
+                    android:layout_marginStart="8dp"
                     app:cardCornerRadius="8dp"
                     app:cardElevation="0dp"
                     app:strokeColor="@color/divider_color"
                     app:strokeWidth="1dp"
+                    app:cardBackgroundColor="@color/white"
                     tools:cardBackgroundColor="@color/material_grey_600" />
             </LinearLayout>
 
@@ -111,6 +120,7 @@
                 app:cardElevation="0dp"
                 app:strokeColor="@color/divider_color"
                 app:strokeWidth="1dp"
+                app:cardBackgroundColor="@color/white"
                 android:visibility="gone"
                 tools:visibility="visible">
 
@@ -118,7 +128,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="16dp">
+                    android:padding="16dp"
+                    android:background="#F9FAFB"
+                    android:strokeColor="#E5E7EB">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -126,7 +138,8 @@
                         android:text="@string/select_custom_color_title"
                         android:textStyle="bold"
                         android:textSize="16sp"
-                        android:layout_gravity="center_horizontal"/>
+                        android:layout_gravity="center_horizontal"
+                        android:textColor="#374151"/>
 
                     <com.skydoves.colorpickerview.ColorPickerView
                         android:id="@+id/color_picker_view"
@@ -175,6 +188,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:layout_marginEnd="4dp"
+                            app:cornerRadius="6dp"
                             android:text="@string/select_button"
                             app:backgroundTint="@color/tag_button_blue"/>
 
@@ -186,8 +200,9 @@
                             android:layout_weight="1"
                             android:layout_marginStart="4dp"
                             android:text="@string/cancel_button"
-                            android:textColor="@color/material_grey_600"
-                            app:strokeColor="@color/divider_color"/>
+                            app:cornerRadius="6dp"
+                            android:textColor="#374151"
+                            app:strokeColor="#D1D5DB"/>
                     </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -198,15 +213,18 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:text="@string/tag_icon_optional_label"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:textColor="#374151" />
 
             <com.google.android.material.chip.ChipGroup
                 android:id="@+id/chip_group_icons"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="4dp"
                 app:chipSpacingHorizontal="4dp"
-                app:singleSelection="true"/>
+                app:chipSpacingVertical="8dp"
+                app:singleSelection="true"
+                android:background="@color/white"/>
 
             <!-- Custom Icon Section in one line -->
             <LinearLayout
@@ -220,13 +238,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/custom_icon_label"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:textColor="#374151" />
 
                 <LinearLayout
                     android:id="@+id/custom_icon_container"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
+                    android:layout_marginStart="8dp"
                     android:orientation="horizontal" />
 
             </LinearLayout>
@@ -241,7 +260,8 @@
                 android:paddingVertical="12dp"
                 android:text="@string/save_tag_button"
                 app:backgroundTint="@color/tag_button_blue"
-                app:cornerRadius="12dp" />
+                app:cornerRadius="12dp"
+                android:textColor="@android:color/white" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_cancel"
@@ -252,7 +272,9 @@
                 android:paddingVertical="12dp"
                 android:text="@string/cancel_button"
                 android:textColor="@color/material_grey_600"
-                app:strokeColor="@color/divider_color" />
+                app:strokeColor="@color/divider_color"
+                app:cornerRadius="12dp"
+                app:backgroundTint="@color/light_gray_background" />
 
         </LinearLayout>
     </ScrollView>

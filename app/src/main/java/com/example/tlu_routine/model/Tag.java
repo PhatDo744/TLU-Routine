@@ -9,17 +9,29 @@ public class Tag implements Parcelable {
     private String name;
     private String colorHex;
     private int iconResId;
+    private String iconEmoji; // emoji icon, nullable
 
+    // Constructor cho emoji
+    public Tag(String name, String colorHex, String iconEmoji) {
+        this.name = name;
+        this.colorHex = colorHex;
+        this.iconEmoji = iconEmoji;
+        this.iconResId = 0;
+    }
+
+    // Constructor cũ cho resource id
     public Tag(String name, String colorHex, int iconResId) {
         this.name = name;
         this.colorHex = colorHex;
         this.iconResId = iconResId;
+        this.iconEmoji = null;
     }
 
     protected Tag(Parcel in) {
         name = in.readString();
         colorHex = in.readString();
         iconResId = in.readInt();
+        iconEmoji = in.readString();
     }
 
     public static final Creator<Tag> CREATOR = new Creator<Tag>() {
@@ -58,6 +70,14 @@ public class Tag implements Parcelable {
         this.iconResId = iconResId;
     }
 
+    public String getIconEmoji() {
+        return iconEmoji;
+    }
+
+    public void setIconEmoji(String iconEmoji) {
+        this.iconEmoji = iconEmoji;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -68,5 +88,6 @@ public class Tag implements Parcelable {
         dest.writeString(name);
         dest.writeString(colorHex);
         dest.writeInt(iconResId);
+        dest.writeString(iconEmoji);
     }
 }
