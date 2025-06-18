@@ -48,9 +48,16 @@ public class CustomTimePickerDialog extends Dialog {
 
         setContentView(R.layout.dialog_time_picker);
 
-        // Apply rounded corners
+        // Setup window properties for centering and sizing
         if (getWindow() != null) {
             getWindow().setBackgroundDrawableResource(R.drawable.dialog_background);
+
+            // Set dialog size and position
+            android.view.WindowManager.LayoutParams params = getWindow().getAttributes();
+            params.width = (int) (280 * getContext().getResources().getDisplayMetrics().density);
+            params.height = android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
+            params.gravity = android.view.Gravity.CENTER;
+            getWindow().setAttributes(params);
         }
 
         initViews();

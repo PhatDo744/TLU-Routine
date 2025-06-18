@@ -23,6 +23,7 @@ import com.example.tlu_routine.dialog.CustomTimePickerDialog;
 import com.example.tlu_routine.dialog.CustomDatePickerDialog;
 import com.example.tlu_routine.model.Event;
 import com.example.tlu_routine.utils.EventJsonManager;
+import com.example.tlu_routine.utils.CustomToast;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.chip.Chip;
@@ -42,7 +43,7 @@ public class AddEventFragment extends Fragment {
 
     // Interface để communicate với MainActivity
     public interface OnFragmentActionListener {
-        void onEventSaved();
+        void onEventSaved(String action); // "add", "edit", "delete"
 
         void onFragmentClosed();
     }
@@ -63,6 +64,10 @@ public class AddEventFragment extends Fragment {
     private String repeatType = "once"; // "once", "daily", "selected_days"
     private List<String> selectedDays = new ArrayList<>();
     private String selectedTag = "";
+
+    // Edit mode
+    private boolean isEditMode = false;
+    private Event editingEvent = null;
 
     // Flag để tránh infinite loop khi auto-update
     private boolean isUpdatingDuration = false;
@@ -105,7 +110,22 @@ public class AddEventFragment extends Fragment {
     }
 
     private void setupToolbar() {
-        toolbar.setTitle("Thêm sự kiện");
+        if (isEditMode) {
+            toolbar.setTitle("Sửa sự kiện");
+
+            // Add delete button to toolbar
+            toolbar.inflateMenu(R.menu.menu_edit_event);
+            toolbar.setOnMenuItemClickListener(item -> {
+                if (item.getItemId() == R.id.action_delete) {
+                    showDeleteConfirmDialog();
+                    return true;
+                }
+                return false;
+            });
+        } else {
+            toolbar.setTitle("Thêm sự kiện");
+        }
+
         toolbar.setNavigationOnClickListener(v -> {
             // Close fragment
             closeFragment();
@@ -199,26 +219,89 @@ public class AddEventFragment extends Fragment {
     }
 
     private void setDefaultValues() {
-        // Set default repeat type and styling
-        selectChip(chipOnce);
+        if (isEditMode && editingEvent != null) {
+            // Populate form with existing event data
+            populateFormWithEvent(editingEvent);
+        } else {
+            // Set default values for new event
+            // Set default repeat type and styling
+            selectChip(chipOnce);
 
-        // Get suggested start time based on last event
-        EventJsonManager jsonManager = new EventJsonManager(getContext());
-        String suggestedTime = jsonManager.getSuggestedStartTime(selectedDate);
+            // Get suggested start time based on last event
+            EventJsonManager jsonManager = new EventJsonManager(getContext());
+            String suggestedTime = jsonManager.getSuggestedStartTime(selectedDate);
 
-        // Set suggested start time
-        selectedStartTime = suggestedTime;
-        tvStartTime.setText(suggestedTime);
+            // Set suggested start time
+            selectedStartTime = suggestedTime;
+            tvStartTime.setText(suggestedTime);
+            tvStartTime.setTextColor(getResources().getColor(R.color.black, null));
+
+            // Set empty end time
+            selectedEndTime = "";
+            tvEndTime.setText("--:--");
+            tvEndTime.setTextColor(getResources().getColor(R.color.gray_text, null));
+
+            // Set default date display
+            updateDateDisplay();
+            tvSelectedDate.setTextColor(getResources().getColor(R.color.black, null));
+        }
+    }
+
+    // Public method to set edit mode
+    public void setEditMode(Event event) {
+        this.isEditMode = true;
+        this.editingEvent = event;
+    }
+
+    // Public method to set selected date from calendar
+    public void setSelectedDate(LocalDate date) {
+        this.selectedDate = date;
+    }
+
+    private void populateFormWithEvent(Event event) {
+        // Set event name
+        etEventName.setText(event.getName());
+
+        // Set times
+        selectedStartTime = event.getStartTime();
+        selectedEndTime = event.getEndTime();
+        tvStartTime.setText(selectedStartTime);
         tvStartTime.setTextColor(getResources().getColor(R.color.black, null));
+        tvEndTime.setText(selectedEndTime);
+        tvEndTime.setTextColor(getResources().getColor(R.color.black, null));
 
-        // Set empty end time
-        selectedEndTime = "";
-        tvEndTime.setText("--:--");
-        tvEndTime.setTextColor(getResources().getColor(R.color.gray_text, null));
+        // Set duration
+        etDuration.setText(event.getDuration());
 
-        // Set default date display
+        // Set date
+        selectedDate = event.getDate();
         updateDateDisplay();
         tvSelectedDate.setTextColor(getResources().getColor(R.color.black, null));
+
+        // Set repeat type
+        repeatType = event.getRepeatType();
+        selectedDays = event.getSelectedDays() != null ? new ArrayList<>(event.getSelectedDays()) : new ArrayList<>();
+
+        switch (repeatType) {
+            case "once":
+                selectChip(chipOnce);
+                break;
+            case "daily":
+                selectChip(chipDaily);
+                break;
+            case "selected_days":
+                selectChip(chipSelectedDays);
+                break;
+        }
+
+        // Set notification
+        cbNotification.setChecked(event.isNotificationEnabled());
+
+        // Set tag
+        selectedTag = event.getTag() != null ? event.getTag() : "";
+
+        // Set location
+        etLocation.setText(event.getLocation() != null ? event.getLocation() : "");
     }
 
     private void showTimePicker(boolean isStartTime) {
@@ -567,12 +650,12 @@ public class AddEventFragment extends Fragment {
         String location = etLocation.getText().toString().trim();
 
         if (eventName.isEmpty()) {
-            etEventName.setError("Vui lòng nhập tên sự kiện");
+            CustomToast.showWarning(getContext(), "Vui lòng nhập tên sự kiện");
             return;
         }
 
         if (selectedStartTime.isEmpty() || selectedEndTime.isEmpty()) {
-            Toast.makeText(getContext(), "Vui lòng chọn thời gian", Toast.LENGTH_SHORT).show();
+            CustomToast.showWarning(getContext(), "Vui lòng chọn thời gian");
             return;
         }
 
@@ -587,55 +670,146 @@ public class AddEventFragment extends Fragment {
             int endMinute = Integer.parseInt(endParts[1]);
 
             if (endHour < startHour || (endHour == startHour && endMinute <= startMinute)) {
-                Toast.makeText(getContext(), "Thời gian kết thúc phải sau thời gian bắt đầu trong cùng ngày",
-                        Toast.LENGTH_SHORT).show();
+                CustomToast.showWarning(getContext(), "Thời gian kết thúc phải sau thời gian bắt đầu trong cùng ngày");
                 return;
             }
         } catch (Exception e) {
-            Toast.makeText(getContext(), "Định dạng thời gian không hợp lệ", Toast.LENGTH_SHORT).show();
+            CustomToast.showWarning(getContext(), "Định dạng thời gian không hợp lệ");
             return;
         }
 
         // Validate time format and range
         if (!isValidTimeFormat(selectedStartTime) || !isValidTimeFormat(selectedEndTime)) {
-            Toast.makeText(getContext(), "Định dạng thời gian không hợp lệ", Toast.LENGTH_SHORT).show();
+            CustomToast.showWarning(getContext(), "Định dạng thời gian không hợp lệ");
             return;
         }
 
-        // Create Event object
-        Event event = new Event();
-        event.setName(eventName);
-        event.setStartTime(selectedStartTime);
-        event.setEndTime(selectedEndTime);
-        event.setDuration(duration);
-        event.setDate(selectedDate);
-        event.setRepeatType(repeatType);
-        event.setSelectedDays(new ArrayList<>(selectedDays));
-        event.setNotificationEnabled(cbNotification.isChecked());
-        event.setTag(selectedTag);
-        event.setLocation(location);
-        event.setCompleted(false); // Mặc định chưa hoàn thành
-
-        // Check for time conflicts
         EventJsonManager jsonManager = new EventJsonManager(getContext());
-        if (jsonManager.hasTimeConflict(event)) {
-            Event conflictingEvent = jsonManager.getConflictingEvent(event);
-            String message = conflictingEvent != null ? String.format("Xung đột thời gian với sự kiện '%s' (%s - %s)",
-                    conflictingEvent.getName(),
-                    conflictingEvent.getStartTime(),
-                    conflictingEvent.getEndTime()) : "Sự kiện bị xung đột thời gian với sự kiện khác";
+        Event event;
 
-            Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
-            return;
+        if (isEditMode && editingEvent != null) {
+            // Update existing event
+            event = editingEvent;
+            event.setName(eventName);
+            event.setStartTime(selectedStartTime);
+            event.setEndTime(selectedEndTime);
+            event.setDuration(duration);
+            event.setDate(selectedDate);
+            event.setRepeatType(repeatType);
+            event.setSelectedDays(new ArrayList<>(selectedDays));
+            event.setNotificationEnabled(cbNotification.isChecked());
+            event.setTag(selectedTag);
+            event.setLocation(location);
+
+            // Check for time conflicts (exclude current event)
+            if (jsonManager.hasTimeConflict(event)) {
+                Event conflictingEvent = jsonManager.getConflictingEvent(event);
+                String message = conflictingEvent != null
+                        ? String.format("Xung đột thời gian với sự kiện '%s' (%s - %s)",
+                                conflictingEvent.getName(),
+                                conflictingEvent.getStartTime(),
+                                conflictingEvent.getEndTime())
+                        : "Sự kiện bị xung đột thời gian với sự kiện khác";
+
+                CustomToast.showWarning(getContext(), message);
+                return;
+            }
+
+            jsonManager.updateEvent(event);
+
+        } else {
+            // Create new event
+            event = new Event();
+            event.setName(eventName);
+            event.setStartTime(selectedStartTime);
+            event.setEndTime(selectedEndTime);
+            event.setDuration(duration);
+            event.setDate(selectedDate);
+            event.setRepeatType(repeatType);
+            event.setSelectedDays(new ArrayList<>(selectedDays));
+            event.setNotificationEnabled(cbNotification.isChecked());
+            event.setTag(selectedTag);
+            event.setLocation(location);
+            event.setCompleted(false); // Mặc định chưa hoàn thành
+
+            // Check for time conflicts
+            if (jsonManager.hasTimeConflict(event)) {
+                Event conflictingEvent = jsonManager.getConflictingEvent(event);
+                String message = conflictingEvent != null
+                        ? String.format("Xung đột thời gian với sự kiện '%s' (%s - %s)",
+                                conflictingEvent.getName(),
+                                conflictingEvent.getStartTime(),
+                                conflictingEvent.getEndTime())
+                        : "Sự kiện bị xung đột thời gian với sự kiện khác";
+
+                CustomToast.showWarning(getContext(), message);
+                return;
+            }
+
+            // Save event
+            jsonManager.saveEvent(event);
         }
-
-        // Save event
-        jsonManager.saveEvent(event);
-        Toast.makeText(getContext(), "Đã lưu sự kiện: " + eventName, Toast.LENGTH_SHORT).show();
 
         // Notify MainActivity và close fragment
         if (requireActivity() instanceof OnFragmentActionListener) {
-            ((OnFragmentActionListener) requireActivity()).onEventSaved();
+            if (isEditMode) {
+                ((OnFragmentActionListener) requireActivity()).onEventSaved("edit");
+            } else {
+                ((OnFragmentActionListener) requireActivity()).onEventSaved("add");
+            }
+        } else {
+            closeFragment();
+        }
+    }
+
+    private void showDeleteConfirmDialog() {
+        if (!isEditMode || editingEvent == null) {
+            return;
+        }
+
+        // Create custom dialog
+        androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(
+                getContext());
+        View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.dialog_delete_confirmation, null);
+        builder.setView(dialogView);
+
+        // Get views
+        TextView tvMessage = dialogView.findViewById(R.id.tv_message);
+        MaterialButton btnConfirm = dialogView.findViewById(R.id.btn_confirm);
+        MaterialButton btnCancel = dialogView.findViewById(R.id.btn_cancel);
+
+        // Set message with event name
+        tvMessage.setText("Bạn có chắc muốn xóa sự kiện này không?");
+
+        androidx.appcompat.app.AlertDialog dialog = builder.create();
+
+        // Make dialog background transparent
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        }
+
+        // Set button listeners
+        btnConfirm.setOnClickListener(v -> {
+            deleteEvent();
+            dialog.dismiss();
+        });
+
+        btnCancel.setOnClickListener(v -> dialog.dismiss());
+
+        dialog.show();
+    }
+
+    private void deleteEvent() {
+        if (!isEditMode || editingEvent == null) {
+            return;
+        }
+
+        EventJsonManager jsonManager = new EventJsonManager(getContext());
+        jsonManager.deleteEvent(editingEvent.getId());
+
+        // Notify MainActivity và close fragment
+        if (requireActivity() instanceof OnFragmentActionListener) {
+            ((OnFragmentActionListener) requireActivity()).onEventSaved("delete");
         } else {
             closeFragment();
         }

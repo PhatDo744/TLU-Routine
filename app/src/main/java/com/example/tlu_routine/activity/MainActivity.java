@@ -24,6 +24,7 @@ import com.example.tlu_routine.utils.SwipeGestureDetector;
 import com.example.tlu_routine.adapter.EventAdapter;
 import com.example.tlu_routine.model.Event;
 import com.example.tlu_routine.utils.EventJsonManager;
+import com.example.tlu_routine.utils.CustomToast;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -64,6 +65,13 @@ public class MainActivity extends AppCompatActivity
     private LinearLayout layoutEmptyState;
     private EventAdapter eventAdapter;
     private EventJsonManager eventJsonManager;
+
+    // Interface để communicate với MainActivity
+    public interface OnFragmentActionListener {
+        void onEventSaved(String action); // "add", "edit", "delete"
+
+        void onFragmentClosed();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -178,8 +186,6 @@ public class MainActivity extends AppCompatActivity
         updateDaySelection();
 
         LocalDate selectedDate = currentWeekStart.plusDays(dayIndex);
-        Toast.makeText(this, "Đã chọn: " + selectedDate.getDayOfMonth() + "/" + selectedDate.getMonthValue(),
-                Toast.LENGTH_SHORT).show();
 
         // Load events for selected date
         loadEventsForDate(selectedDate);
@@ -241,6 +247,39 @@ public class MainActivity extends AppCompatActivity
 
         // Create and show AddEventFragment
         AddEventFragment fragment = new AddEventFragment();
+
+        // Set the selected date from calendar
+        LocalDate selectedDate = currentWeekStart.plusDays(selectedDayIndex);
+        fragment.setSelectedDate(selectedDate);
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.replace(R.id.nav_host_fragment, fragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
+    }
+
+    private void showEditEventFragment(Event event) {
+        // Show fragment container, hide main content
+        fragmentContainer.setVisibility(View.VISIBLE);
+        mainContent.setVisibility(View.GONE);
+
+        // Disable and dim bottom navigation
+        if (bottomNavigation != null) {
+            bottomNavigation.setAlpha(0.3f); // Làm mờ
+            bottomNavigation.setEnabled(false); // Disable clicks
+
+            // Disable all child views
+            for (int i = 0; i < ((android.view.ViewGroup) bottomNavigation).getChildCount(); i++) {
+                View child = ((android.view.ViewGroup) bottomNavigation).getChildAt(i);
+                child.setEnabled(false);
+            }
+        }
+
+        // Create and show AddEventFragment in edit mode
+        AddEventFragment fragment = new AddEventFragment();
+        fragment.setEditMode(event); // Set edit mode with event data
+
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.replace(R.id.nav_host_fragment, fragment);
@@ -367,8 +406,24 @@ public class MainActivity extends AppCompatActivity
 
     // Implementation của OnFragmentActionListener interface
     @Override
-    public void onEventSaved() {
-        Toast.makeText(this, "Đã lưu sự kiện thành công", Toast.LENGTH_LONG).show();
+    public void onEventSaved(String action) {
+        String message;
+        switch (action) {
+            case "add":
+                message = "Thêm sự kiện thành công";
+                break;
+            case "edit":
+                message = "Sửa sự kiện thành công";
+                break;
+            case "delete":
+                message = "Xóa sự kiện thành công";
+                break;
+            default:
+                message = "Thao tác thành công";
+                break;
+        }
+
+        CustomToast.showSuccess(this, message);
         hideFragmentAndShowMain();
 
         // Refresh events list for current selected date
@@ -403,8 +458,8 @@ public class MainActivity extends AppCompatActivity
         eventAdapter.setOnEventClickListener(new EventAdapter.OnEventClickListener() {
             @Override
             public void onEventClick(Event event) {
-                // TODO: Show event details or edit event
-                Toast.makeText(MainActivity.this, "Đã chọn: " + event.getName(), Toast.LENGTH_SHORT).show();
+                // Show edit event fragment
+                showEditEventFragment(event);
             }
 
             @Override
@@ -423,7 +478,8 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void loadEventsForDate(LocalDate date) {
-        // Load events from JSON
+        // Force reload from JSON (clear any cache)
+        eventJsonManager = new EventJsonManager(this);
         List<Event> events = eventJsonManager.getEventsByDate(date);
 
         if (events.isEmpty()) {

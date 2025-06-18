@@ -79,6 +79,7 @@ public class EventJsonManager {
         List<Event> events = loadEvents();
         events.removeIf(event -> event.getId().equals(eventId));
         saveEvents(events);
+        Log.d(TAG, "Event deleted: " + eventId);
     }
 
     public void deleteAllEvents() {
@@ -127,14 +128,25 @@ public class EventJsonManager {
 
         for (Event event : allEvents) {
             if (event.getRepeatType().equals("daily")) {
-                filteredEvents.add(event);
+                // Daily events show from start date onwards (including start date)
+                if (date.equals(event.getDate()) || date.isAfter(event.getDate())) {
+                    filteredEvents.add(event);
+                }
             } else if (event.getRepeatType().equals("once") && event.getDate().equals(date)) {
                 filteredEvents.add(event);
             } else if (event.getRepeatType().equals("selected_days")) {
-                // Check if current day of week is in selected days
-                String dayOfWeek = getDayOfWeekInVietnamese(date.getDayOfWeek().getValue());
-                if (event.getSelectedDays() != null && event.getSelectedDays().contains(dayOfWeek)) {
+                // Selected days events show:
+                // 1. On the start date (always show on start date regardless of day of week)
+                // 2. On selected days from start date onwards
+                if (date.equals(event.getDate())) {
+                    // Always show on the start date
                     filteredEvents.add(event);
+                } else if (date.isAfter(event.getDate())) {
+                    // Show on selected days after start date
+                    String dayOfWeek = getDayOfWeekInVietnamese(date.getDayOfWeek().getValue());
+                    if (event.getSelectedDays() != null && event.getSelectedDays().contains(dayOfWeek)) {
+                        filteredEvents.add(event);
+                    }
                 }
             }
         }
