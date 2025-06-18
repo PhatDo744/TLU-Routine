@@ -145,7 +145,7 @@ public class AddEventFragment extends Fragment {
         // Button chọn thẻ sự kiện
         btnSelectTag.setOnClickListener(v -> {
             // Navigate to tag selection - sẽ implement sau
-            Toast.makeText(getContext(), "Chọn thẻ sự kiện", Toast.LENGTH_SHORT).show();
+            // Toast.makeText(getContext(), "Chọn thẻ sự kiện", Toast.LENGTH_SHORT).show();
         });
 
         // Button lưu
@@ -204,8 +204,8 @@ public class AddEventFragment extends Fragment {
 
     private void resetChipToUnselected(Chip chip) {
         chip.setChecked(false);
-        chip.setTextColor(getResources().getColor(R.color.gray_text, null));
-        chip.setChipBackgroundColorResource(R.color.light_gray_background);
+        chip.setTextColor(getResources().getColor(android.R.color.black, null));
+        chip.setChipBackgroundColor(android.content.res.ColorStateList.valueOf(0xFFDBE5F5));
         chip.setChipStrokeColorResource(R.color.divider_color);
         chip.setAlpha(0.7f); // Mờ đi khi không được chọn
     }
@@ -341,7 +341,7 @@ public class AddEventFragment extends Fragment {
                 (selectedHour, selectedMinute) -> {
                     // Validate time is within 24h
                     if (selectedHour >= 24) {
-                        Toast.makeText(getContext(), "Giờ không thể vượt quá 23", Toast.LENGTH_SHORT).show();
+                        CustomToast.showWarning(getContext(), "Giờ không thể vượt quá 23");
                         return;
                     }
 
@@ -367,9 +367,8 @@ public class AddEventFragment extends Fragment {
                             // End time must be after start time in the same day
                             if (selectedHour < startHour
                                     || (selectedHour == startHour && selectedMinute <= startMinute)) {
-                                Toast.makeText(getContext(),
-                                        "Thời gian kết thúc phải sau thời gian bắt đầu trong cùng ngày",
-                                        Toast.LENGTH_SHORT).show();
+                                CustomToast.showWarning(getContext(),
+                                        "Thời gian kết thúc phải sau thời gian bắt đầu trong cùng ngày");
                                 return;
                             }
                         }
@@ -452,7 +451,7 @@ public class AddEventFragment extends Fragment {
             if (selectedDays.isEmpty()) {
                 selectChip(chipOnce);
                 repeatType = "once";
-                Toast.makeText(getContext(), "Chưa chọn ngày nào, chuyển về 'Chỉ 1 lần'", Toast.LENGTH_SHORT).show();
+                CustomToast.showWarning(getContext(), "Chưa chọn ngày nào, chuyển về 'Chỉ 1 lần'");
             }
             dialog.dismiss();
         });
@@ -491,7 +490,7 @@ public class AddEventFragment extends Fragment {
 
             // Only allow events within the same day
             if (durationMinutes <= 0) {
-                Toast.makeText(getContext(), "Sự kiện phải kết thúc trong cùng ngày", Toast.LENGTH_SHORT).show();
+                CustomToast.showWarning(getContext(), "Sự kiện phải kết thúc trong cùng ngày");
                 selectedEndTime = "";
                 tvEndTime.setText("--:--");
                 tvEndTime.setTextColor(getResources().getColor(R.color.gray_text, null));
@@ -552,7 +551,7 @@ public class AddEventFragment extends Fragment {
                 etDuration.setText(actualDurationText);
                 isUpdatingDuration = false;
 
-                Toast.makeText(getContext(), "Sự kiện không thể vượt quá 23:59", Toast.LENGTH_SHORT).show();
+                CustomToast.showWarning(getContext(), "Sự kiện không thể vượt quá 23:59");
             }
 
             int endHour = endTotalMinutes / 60;

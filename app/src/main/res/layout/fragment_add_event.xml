@@ -203,16 +203,17 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
+                android:layout_marginBottom="20dp"
+                android:layout_marginTop="8dp"
                 android:background="@drawable/chip_group_background"
-                android:padding="2dp"
+                android:padding="4dp"
                 android:orientation="horizontal">
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chip_once"
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"
-                    android:layout_marginEnd="4dp"
+                    android:layout_marginEnd="6dp"
                     android:text="Chỉ 1 lần"
                     android:textColor="#3B82F6"
                     android:textSize="13sp"
@@ -225,24 +226,28 @@
                     app:chipMinHeight="40dp"
                     app:chipStartPadding="12dp"
                     app:chipEndPadding="12dp"
+                    app:chipIcon="@null"
+                    app:checkedIcon="@null"
                     style="@style/Widget.Material3.Chip.Filter" />
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chip_daily"
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"
-                    android:layout_marginEnd="4dp"
+                    android:layout_marginEnd="6dp"
                     android:text="Hằng ngày"
-                    android:textColor="#6B7280"
+                    android:textColor="#000000"
                     android:textSize="13sp"
                     android:textAlignment="center"
-                    app:chipBackgroundColor="#F9FAFB"
+                    app:chipBackgroundColor="#DBE5F5"
                     app:chipStrokeColor="#E5E7EB"
                     app:chipStrokeWidth="1dp"
                     app:chipCornerRadius="20dp"
                     app:chipMinHeight="40dp"
                     app:chipStartPadding="12dp"
                     app:chipEndPadding="12dp"
+                    app:chipIcon="@null"
+                    app:checkedIcon="@null"
                     style="@style/Widget.Material3.Chip.Filter" />
 
                 <com.google.android.material.chip.Chip
@@ -250,16 +255,18 @@
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"
                     android:text="Ngày đã chọn"
-                    android:textColor="#6B7280"
+                    android:textColor="#000000"
                     android:textSize="13sp"
                     android:textAlignment="center"
-                    app:chipBackgroundColor="#F9FAFB"
+                    app:chipBackgroundColor="#DBE5F5"
                     app:chipStrokeColor="#E5E7EB"
                     app:chipStrokeWidth="1dp"
                     app:chipCornerRadius="20dp"
                     app:chipMinHeight="40dp"
                     app:chipStartPadding="12dp"
                     app:chipEndPadding="12dp"
+                    app:chipIcon="@null"
+                    app:checkedIcon="@null"
                     style="@style/Widget.Material3.Chip.Filter" />
 
             </LinearLayout>
@@ -313,13 +320,13 @@
                     android:layout_height="40dp"
                     android:layout_weight="1"
                     android:text="Chọn thẻ sự kiện"
-                    android:textColor="#3B82F6"
+                    android:textColor="#000000"
                     android:textSize="14sp"
                     android:textStyle="normal"
                     android:textAllCaps="false"
-                    app:backgroundTint="#E0F2FE"
+                    app:backgroundTint="#DBE5F5"
                     app:cornerRadius="14dp"
-                    app:strokeColor="#3B82F6"
+                    app:strokeColor="#E5E7EB"
                     app:strokeWidth="1dp"
                     android:paddingVertical="0dp"
                     style="@style/Widget.Material3.Button.OutlinedButton" />

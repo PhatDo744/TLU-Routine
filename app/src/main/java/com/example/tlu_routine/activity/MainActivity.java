@@ -25,6 +25,7 @@ import com.example.tlu_routine.adapter.EventAdapter;
 import com.example.tlu_routine.model.Event;
 import com.example.tlu_routine.utils.EventJsonManager;
 import com.example.tlu_routine.utils.CustomToast;
+import com.example.tlu_routine.dialog.CustomDatePickerDialog;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -212,7 +213,7 @@ public class MainActivity extends AppCompatActivity
         // Next week
         currentWeekStart = currentWeekStart.plusWeeks(1);
         updateCalendarDisplay();
-        Toast.makeText(this, "Tuần tiếp theo", Toast.LENGTH_SHORT).show();
+        // Toast.makeText(this, "Tuần tiếp theo", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -220,7 +221,7 @@ public class MainActivity extends AppCompatActivity
         // Previous week
         currentWeekStart = currentWeekStart.minusWeeks(1);
         updateCalendarDisplay();
-        Toast.makeText(this, "Tuần trước", Toast.LENGTH_SHORT).show();
+        // Toast.makeText(this, "Tuần trước", Toast.LENGTH_SHORT).show();
     }
 
     private String getMonthYearText(LocalDate date) {
@@ -335,60 +336,27 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void showFullCalendar() {
-        MaterialDatePicker<Long> datePicker = MaterialDatePicker.Builder.datePicker()
-                .setTitleText("Chọn ngày")
-                .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
-                // Áp dụng custom theme với màu #3B82F6
-                .setTheme(R.style.CustomDatePickerTheme)
-                .build();
+        // Get current selected date
+        LocalDate currentSelectedDate = currentWeekStart.plusDays(selectedDayIndex);
 
-        // Cho phép dismiss khi click outside (như nút OK)
-        datePicker.setCancelable(true);
+        CustomDatePickerDialog datePickerDialog = new CustomDatePickerDialog(
+                this,
+                currentSelectedDate,
+                selectedDate -> {
+                    // Get week start for selected date (Monday)
+                    WeekFields weekFields = WeekFields.of(Locale.getDefault());
+                    currentWeekStart = selectedDate.with(weekFields.dayOfWeek(), 1);
 
-        datePicker.show(getSupportFragmentManager(), "FULL_CALENDAR");
+                    // Find which day of week was selected (0=Monday, 6=Sunday)
+                    selectedDayIndex = (int) selectedDate.getDayOfWeek().getValue() - 1;
 
-        // Listener cho nút "Chọn" (Positive Button)
-        datePicker.addOnPositiveButtonClickListener(selection -> {
-            handleDateSelection(selection);
-        });
+                    // Update calendar display to show the week containing selected date
+                    updateCalendarDisplay();
 
-        // Listener cho nút "Hủy" (Negative Button)
-        datePicker.addOnNegativeButtonClickListener(dialog -> {
-            Toast.makeText(this, "Đã hủy chọn ngày", Toast.LENGTH_SHORT).show();
-        });
-
-        // Listener cho việc click outside (Cancel) - xử lý như OK
-        datePicker.addOnCancelListener(dialog -> {
-            // Lấy selection hiện tại nếu có
-            Long currentSelection = datePicker.getSelection();
-            if (currentSelection != null) {
-                handleDateSelection(currentSelection);
-            } else {
-                Toast.makeText(this, "Không có ngày nào được chọn", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    // Tách riêng logic xử lý chọn ngày để tái sử dụng
-    private void handleDateSelection(Long selection) {
-        // Convert milliseconds to LocalDate
-        LocalDate selectedDate = Instant.ofEpochMilli(selection)
-                .atZone(ZoneId.systemDefault())
-                .toLocalDate();
-
-        // Get week start for selected date (Monday)
-        WeekFields weekFields = WeekFields.of(Locale.getDefault());
-        currentWeekStart = selectedDate.with(weekFields.dayOfWeek(), 1);
-
-        // Find which day of week was selected (0=Monday, 6=Sunday)
-        selectedDayIndex = (int) selectedDate.getDayOfWeek().getValue() - 1;
-
-        // Update calendar display to show the week containing selected date
-        updateCalendarDisplay();
-
-        Toast.makeText(this,
-                "Đã chuyển đến tuần chứa ngày " + selectedDate.getDayOfMonth() + "/" + selectedDate.getMonthValue(),
-                Toast.LENGTH_SHORT).show();
+                    // Load events for selected date
+                    loadEventsForDate(selectedDate);
+                });
+        datePickerDialog.show();
     }
 
     private void setupStatusBar() {
@@ -469,7 +437,8 @@ public class MainActivity extends AppCompatActivity
                 eventJsonManager.updateEvent(event);
 
                 String status = isChecked ? "Đã hoàn thành" : "Chưa hoàn thành";
-                Toast.makeText(MainActivity.this, event.getName() + ": " + status, Toast.LENGTH_SHORT).show();
+                // Toast.makeText(MainActivity.this, event.getName() + ": " + status,
+                // Toast.LENGTH_SHORT).show();
 
                 // Refresh the list to update UI
                 eventAdapter.notifyDataSetChanged();
@@ -523,7 +492,7 @@ public class MainActivity extends AppCompatActivity
                                     .setPositiveButton("Xóa", (d, w) -> {
                                         eventJsonManager.deleteAllEvents();
                                         loadEventsForDate(currentWeekStart.plusDays(selectedDayIndex));
-                                        Toast.makeText(this, "Đã xóa toàn bộ sự kiện", Toast.LENGTH_SHORT).show();
+                                        // Toast.makeText(this, "Đã xóa toàn bộ sự kiện", Toast.LENGTH_SHORT).show();
                                     })
                                     .setNegativeButton("Hủy", null)
                                     .show();
@@ -536,7 +505,7 @@ public class MainActivity extends AppCompatActivity
                                     .setPositiveButton("Xóa", (d, w) -> {
                                         eventJsonManager.deleteEventsFile();
                                         loadEventsForDate(currentWeekStart.plusDays(selectedDayIndex));
-                                        Toast.makeText(this, "Đã xóa file JSON", Toast.LENGTH_SHORT).show();
+                                        // Toast.makeText(this, "Đã xóa file JSON", Toast.LENGTH_SHORT).show();
                                     })
                                     .setNegativeButton("Hủy", null)
                                     .show();
@@ -553,7 +522,7 @@ public class MainActivity extends AppCompatActivity
 
                         case 4: // Reload data
                             loadEventsForDate(currentWeekStart.plusDays(selectedDayIndex));
-                            Toast.makeText(this, "Đã reload dữ liệu", Toast.LENGTH_SHORT).show();
+                            // Toast.makeText(this, "Đã reload dữ liệu", Toast.LENGTH_SHORT).show();
                             break;
                     }
                 })

@@ -13,6 +13,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 
 import com.example.tlu_routine.R;
+import com.example.tlu_routine.utils.CustomToast;
 import com.google.android.material.button.MaterialButton;
 
 import java.util.Locale;
@@ -166,7 +167,7 @@ public class CustomTimePickerDialog extends Dialog {
         String minuteText = etMinute.getText().toString().trim();
 
         if (hourText.isEmpty() || minuteText.isEmpty()) {
-            Toast.makeText(getContext(), "Vui lòng nhập đầy đủ giờ và phút", Toast.LENGTH_SHORT).show();
+            CustomToast.showWarning(getContext(), "Vui lòng nhập đầy đủ giờ và phút");
             return false;
         }
 
@@ -175,12 +176,12 @@ public class CustomTimePickerDialog extends Dialog {
             int minute = Integer.parseInt(minuteText);
 
             if (hour < 0 || hour > 23) {
-                Toast.makeText(getContext(), "Giờ phải từ 00 đến 23", Toast.LENGTH_SHORT).show();
+                CustomToast.showWarning(getContext(), "Giờ phải từ 00 đến 23");
                 return false;
             }
 
             if (minute < 0 || minute > 59) {
-                Toast.makeText(getContext(), "Phút phải từ 00 đến 59", Toast.LENGTH_SHORT).show();
+                CustomToast.showWarning(getContext(), "Phút phải từ 00 đến 59");
                 return false;
             }
 
@@ -195,7 +196,7 @@ public class CustomTimePickerDialog extends Dialog {
 
             return true;
         } catch (NumberFormatException e) {
-            Toast.makeText(getContext(), "Định dạng thời gian không hợp lệ", Toast.LENGTH_SHORT).show();
+            CustomToast.showWarning(getContext(), "Định dạng thời gian không hợp lệ");
             return false;
         }
     }
