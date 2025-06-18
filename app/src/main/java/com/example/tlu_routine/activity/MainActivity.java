@@ -57,6 +57,7 @@ public class MainActivity extends AppCompatActivity
     // Fragment container and main content views
     private View fragmentContainer;
     private View mainContent;
+    private View bottomNavigation;
 
     // RecyclerView and Event management
     private RecyclerView rvEvents;
@@ -90,6 +91,7 @@ public class MainActivity extends AppCompatActivity
         // Fragment container và main content views
         fragmentContainer = findViewById(R.id.nav_host_fragment);
         mainContent = findViewById(R.id.main_content);
+        bottomNavigation = findViewById(R.id.bottom_navigation);
 
         tvMonthYear = findViewById(R.id.tv_month_year);
         calendarDaysContainer = findViewById(R.id.calendar_days_container);
@@ -225,6 +227,18 @@ public class MainActivity extends AppCompatActivity
         fragmentContainer.setVisibility(View.VISIBLE);
         mainContent.setVisibility(View.GONE);
 
+        // Disable and dim bottom navigation
+        if (bottomNavigation != null) {
+            bottomNavigation.setAlpha(0.3f); // Làm mờ
+            bottomNavigation.setEnabled(false); // Disable clicks
+
+            // Disable all child views
+            for (int i = 0; i < ((android.view.ViewGroup) bottomNavigation).getChildCount(); i++) {
+                View child = ((android.view.ViewGroup) bottomNavigation).getChildAt(i);
+                child.setEnabled(false);
+            }
+        }
+
         // Create and show AddEventFragment
         AddEventFragment fragment = new AddEventFragment();
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -238,6 +252,18 @@ public class MainActivity extends AppCompatActivity
         // Hide fragment container, show main content
         fragmentContainer.setVisibility(View.GONE);
         mainContent.setVisibility(View.VISIBLE);
+
+        // Enable and restore bottom navigation
+        if (bottomNavigation != null) {
+            bottomNavigation.setAlpha(1.0f); // Khôi phục độ trong suốt
+            bottomNavigation.setEnabled(true); // Enable clicks
+
+            // Enable all child views
+            for (int i = 0; i < ((android.view.ViewGroup) bottomNavigation).getChildCount(); i++) {
+                View child = ((android.view.ViewGroup) bottomNavigation).getChildAt(i);
+                child.setEnabled(true);
+            }
+        }
 
         // Clear fragment back stack
         FragmentManager fragmentManager = getSupportFragmentManager();
