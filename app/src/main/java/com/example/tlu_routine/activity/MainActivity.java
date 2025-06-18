@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
         navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
             if (destination.getId() == R.id.fragment_notification ||
                 destination.getId() == R.id.fragment_notification_detail ||
-                destination.getId() == R.id.fragment_notification_settings) {
+                destination.getId() == R.id.fragment_notification_settings || (destination.getId() == R.id.nav_tags) || (destination.getId() == R.id.addEditTagDialogFragment) || (destination.getId() == R.id.deleteConfirmationDialogFragment)) {
                 // Ẩn thanh điều hướng trên màn hình Quản lý thẻ
                 bottomAppBar.setVisibility(View.GONE);
                 fabAdd.setVisibility(View.GONE);
