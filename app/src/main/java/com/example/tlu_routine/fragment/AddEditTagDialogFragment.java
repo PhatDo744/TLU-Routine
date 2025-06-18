@@ -221,7 +221,7 @@ public class AddEditTagDialogFragment extends DialogFragment {
     private void setupColorChips() {
         if (getContext() == null) return;
         colorChipGroup.removeAllViews();
-        int size = (int) (45 * getResources().getDisplayMetrics().density);
+        int size = (int) (46 * getResources().getDisplayMetrics().density);
 
         for (String color : colorPalette) {
             Chip chip = new Chip(getContext());
