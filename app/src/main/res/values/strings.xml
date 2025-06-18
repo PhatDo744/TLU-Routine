@@ -40,4 +40,12 @@
     <string name="menu_stats">Thống kê</string>
     <string name="menu_tags">Thẻ</string>
 
+    <!-- DatePicker Buttons -->
+    <string name="datepicker_select">Chọn</string>
+    <string name="datepicker_cancel">Hủy</string>
+    
+    <!-- Override system strings for MaterialDatePicker -->
+    <string name="mtrl_picker_confirm">Chọn</string>
+    <string name="mtrl_picker_cancel">Hủy</string>
+
 </resources>

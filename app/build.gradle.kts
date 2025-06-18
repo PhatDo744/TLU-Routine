@@ -8,7 +8,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.tlu_routine"
-        minSdk = 24
+        minSdk = 26  // Thay đổi từ 24 → 26 để hỗ trợ Java Time API
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
@@ -39,8 +39,12 @@ dependencies {
     implementation(libs.constraintlayout)
     implementation(libs.navigation.fragment)
     implementation(libs.navigation.ui)
+    implementation(libs.recyclerview)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
     implementation (libs.colorpickerview)
+    
+    // Gson for JSON serialization
+    implementation("com.google.code.gson:gson:2.10.1")
 }

@@ -4,12 +4,11 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -31,7 +30,8 @@ public class TagManagerFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+            @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_tag_manager, container, false);
     }
 
@@ -52,14 +52,19 @@ public class TagManagerFragment extends Fragment {
 
         // Thiết lập sự kiện cho nút tạo thẻ
         createTagButton.setOnClickListener(v -> {
-            Navigation.findNavController(v).navigate(R.id.action_tagManagerFragment_to_addEditTagDialogFragment);
+            // Tạm thời hiển thị Toast, sau này có thể thay bằng dialog hoặc activity mới
+            Toast.makeText(getContext(), "Tạo thẻ mới", Toast.LENGTH_SHORT).show();
         });
     }
 
     private void setupToolbar() {
-        // Lấy NavController và thiết lập sự kiện quay lại
-        final NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
-        toolbar.setNavigationOnClickListener(v -> navController.navigateUp());
+        // Thiết lập sự kiện quay lại đơn giản
+        toolbar.setNavigationOnClickListener(v -> {
+            // Quay lại activity trước đó
+            if (getActivity() != null) {
+                getActivity().onBackPressed();
+            }
+        });
     }
 
     private void setupRecyclerView() {

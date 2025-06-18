@@ -3,7 +3,6 @@ package com.example.tlu_routine.adapter;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +13,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.graphics.drawable.DrawableCompat;
-import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.tlu_routine.R;
@@ -75,14 +73,14 @@ public class TagManagerAdapter extends RecyclerView.Adapter<TagManagerAdapter.Ta
             Drawable wrappedDrawable = DrawableCompat.wrap(unwrappedDrawable);
             DrawableCompat.setTint(wrappedDrawable, Color.parseColor(tag.getColorHex()));
 
-
             // Thiết lập sự kiện click
             editButton.setOnClickListener(v -> {
-                Bundle bundle = new Bundle();
-                bundle.putParcelable("tag_to_edit", tag);
-                Navigation.findNavController(v).navigate(R.id.action_tagManagerFragment_to_addEditTagDialogFragment, bundle);
+                // Tạm thời hiển thị Toast, sau này có thể thay bằng dialog hoặc activity mới
+                Toast.makeText(context, "Sửa: " + tag.getName(), Toast.LENGTH_SHORT).show();
             });
-            deleteButton.setOnClickListener(v -> Toast.makeText(context, "Xóa: " + tag.getName(), Toast.LENGTH_SHORT).show());
+            deleteButton.setOnClickListener(v -> {
+                Toast.makeText(context, "Xóa: " + tag.getName(), Toast.LENGTH_SHORT).show();
+            });
         }
     }
 }

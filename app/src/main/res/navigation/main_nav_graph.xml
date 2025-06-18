@@ -32,4 +32,17 @@
     <action
         android:id="@+id/action_tagManagerFragment_to_addEditTagDialogFragment"
         app:destination="@id/addEditTagDialogFragment" />
+
+    <!-- Fragment cho thêm sự kiện -->
+    <fragment
+        android:id="@+id/addEventFragment"
+        android:name="com.example.tlu_routine.fragment.AddEventFragment"
+        android:label="Thêm sự kiện"
+        tools:layout="@layout/fragment_add_event" />
+
+    <!-- Actions để navigate đến AddEventFragment -->
+    <action
+        android:id="@+id/action_homeFragment_to_addEventFragment"
+        app:destination="@id/addEventFragment" />
+
 </navigation>

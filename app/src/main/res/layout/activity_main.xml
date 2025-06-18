@@ -4,35 +4,466 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@android:color/white"
     tools:context=".activity.MainActivity">
 
-    <!-- Container để hiển thị các Fragment -->
+    <!-- Fragment Container for Single Activity Architecture -->
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/nav_host_fragment"
-        android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:defaultNavHost="true"
-        app:navGraph="@navigation/main_nav_graph" /> <!-- Đã loại bỏ layout_marginBottom -->
+        android:visibility="gone" />
 
-    <!-- Thanh điều hướng dưới cùng -->
-    <com.google.android.material.bottomappbar.BottomAppBar
-        android:id="@+id/bottom_app_bar"
+    <!-- Main Content -->
+    <LinearLayout
+        android:id="@+id/main_content"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        app:fabCradleMargin="10dp"
-        app:fabCradleRoundedCornerRadius="20dp"
-        app:fabAlignmentMode="center"
-        app:menu="@menu/bottom_app_bar_menu"/>
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <!-- Nút hành động nổi (FAB) -->
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_add"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_add"
-        app:layout_anchor="@id/bottom_app_bar"
-        android:contentDescription="@string/cd_add_new_task"/>
+        <!-- Header với Calendar -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            android:orientation="vertical"
+            android:paddingTop="16dp"
+            android:paddingBottom="8dp">
+
+            <!-- Top Bar với icons -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingHorizontal="16dp"
+                android:paddingBottom="16dp"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:id="@+id/iv_calendar_icon"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_calendar"
+                    android:tint="#4285F4"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:padding="4dp"
+                    android:clickable="true"
+                    android:focusable="true" />
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginStart="16dp"
+                    android:src="@drawable/ic_search"
+                    android:tint="#6B7280" />
+
+                <TextView
+                    android:id="@+id/tv_month_year"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Tháng 5 2025"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="#1F2937"
+                    android:gravity="center" />
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_filter"
+                    android:tint="#6B7280" />
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginStart="16dp"
+                    android:src="@drawable/ic_settings"
+                    android:tint="#6B7280" />
+
+            </LinearLayout>
+
+            <!-- Calendar Days -->
+            <LinearLayout
+                android:id="@+id/calendar_days_container"
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:orientation="horizontal"
+                android:paddingHorizontal="4dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:gravity="center_vertical"
+                android:baselineAligned="false">
+
+                <!-- T2 26 (Selected) -->
+                <LinearLayout
+                    android:id="@+id/day_1"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:paddingVertical="8dp"
+                    android:paddingHorizontal="4dp"
+                    android:layout_margin="2dp"
+                    android:background="@drawable/selected_date_background"
+                    android:clickable="true"
+                    android:focusable="true">
+
+                    <TextView
+                        android:id="@+id/tv_day_week_1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Th 2"
+                        android:textSize="12sp"
+                        android:textColor="@android:color/white" />
+
+                    <TextView
+                        android:id="@+id/tv_day_month_1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="26"
+                        android:textSize="16sp"
+                        android:textColor="@android:color/white"
+                        android:layout_marginTop="4dp" />
+
+                </LinearLayout>
+
+                <!-- T3 27 -->
+                <LinearLayout
+                    android:id="@+id/day_2"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:paddingVertical="8dp"
+                    android:paddingHorizontal="4dp"
+                    android:layout_margin="2dp"
+                    android:background="@drawable/unselected_date_background"
+                    android:clickable="true"
+                    android:focusable="true">
+
+                    <TextView
+                        android:id="@+id/tv_day_week_2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Th 3"
+                        android:textSize="12sp"
+                        android:textColor="@color/gray_text" />
+
+                    <TextView
+                        android:id="@+id/tv_day_month_2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="27"
+                        android:textSize="16sp"
+                        android:textColor="@color/gray_text"
+                        android:layout_marginTop="4dp" />
+
+                </LinearLayout>
+
+                <!-- T4 28 -->
+                <LinearLayout
+                    android:id="@+id/day_3"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:paddingVertical="8dp"
+                    android:paddingHorizontal="4dp"
+                    android:layout_margin="2dp"
+                    android:background="@drawable/unselected_date_background"
+                    android:clickable="true"
+                    android:focusable="true">
+
+                    <TextView
+                        android:id="@+id/tv_day_week_3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Th 4"
+                        android:textSize="12sp"
+                        android:textColor="@color/gray_text" />
+
+                    <TextView
+                        android:id="@+id/tv_day_month_3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="28"
+                        android:textSize="16sp"
+                        android:textColor="@color/gray_text"
+                        android:layout_marginTop="4dp" />
+
+                </LinearLayout>
+
+                <!-- T5 29 -->
+                <LinearLayout
+                    android:id="@+id/day_4"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:paddingVertical="8dp"
+                    android:paddingHorizontal="4dp"
+                    android:layout_margin="2dp"
+                    android:background="@drawable/unselected_date_background"
+                    android:clickable="true"
+                    android:focusable="true">
+
+                    <TextView
+                        android:id="@+id/tv_day_week_4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Th 5"
+                        android:textSize="12sp"
+                        android:textColor="@color/gray_text" />
+
+                    <TextView
+                        android:id="@+id/tv_day_month_4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="29"
+                        android:textSize="16sp"
+                        android:textColor="@color/gray_text"
+                        android:layout_marginTop="4dp" />
+
+                </LinearLayout>
+
+                <!-- T6 30 -->
+                <LinearLayout
+                    android:id="@+id/day_5"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:paddingVertical="8dp"
+                    android:paddingHorizontal="4dp"
+                    android:layout_margin="2dp"
+                    android:background="@drawable/unselected_date_background"
+                    android:clickable="true"
+                    android:focusable="true">
+
+                    <TextView
+                        android:id="@+id/tv_day_week_5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Th 6"
+                        android:textSize="12sp"
+                        android:textColor="@color/gray_text" />
+
+                    <TextView
+                        android:id="@+id/tv_day_month_5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="30"
+                        android:textSize="16sp"
+                        android:textColor="@color/gray_text"
+                        android:layout_marginTop="4dp" />
+
+                </LinearLayout>
+
+                <!-- T7 31 -->
+                <LinearLayout
+                    android:id="@+id/day_6"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:paddingVertical="8dp"
+                    android:paddingHorizontal="4dp"
+                    android:layout_margin="2dp"
+                    android:background="@drawable/unselected_date_background"
+                    android:clickable="true"
+                    android:focusable="true">
+
+                    <TextView
+                        android:id="@+id/tv_day_week_6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Th 7"
+                        android:textSize="12sp"
+                        android:textColor="@color/gray_text" />
+
+                    <TextView
+                        android:id="@+id/tv_day_month_6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="31"
+                        android:textSize="16sp"
+                        android:textColor="@color/gray_text"
+                        android:layout_marginTop="4dp" />
+
+                </LinearLayout>
+
+                <!-- CN 1 -->
+                <LinearLayout
+                    android:id="@+id/day_7"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:paddingVertical="8dp"
+                    android:paddingHorizontal="4dp"
+                    android:layout_margin="2dp"
+                    android:background="@drawable/unselected_date_background"
+                    android:clickable="true"
+                    android:focusable="true">
+
+                    <TextView
+                        android:id="@+id/tv_day_week_7"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="CN"
+                        android:textSize="12sp"
+                        android:textColor="@color/gray_text" />
+
+                    <TextView
+                        android:id="@+id/tv_day_month_7"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="1"
+                        android:textSize="16sp"
+                        android:textColor="@color/gray_text"
+                        android:layout_marginTop="4dp" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!-- Main Content Area -->
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <!-- RecyclerView for Events List -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_events"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingTop="8dp"
+                android:paddingBottom="80dp"
+                android:clipToPadding="false"
+                android:visibility="gone" />
+
+            <!-- Empty State -->
+            <LinearLayout
+                android:id="@+id/layout_empty_state"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:paddingTop="16dp"
+                android:paddingBottom="32dp"
+                android:paddingHorizontal="32dp"
+                android:background="@android:color/white">
+
+                <!-- Empty State Icon -->
+                <ImageView
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:src="@drawable/ic_calendar_empty"
+                    android:tint="#3B82F6"
+                    android:layout_marginBottom="24dp" />
+
+                <!-- Empty State Text -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Không có công việc nào được lên lịch cho ngày đã chọn."
+                    android:textSize="16sp"
+                    android:textColor="#6B7280"
+                    android:gravity="center"
+                    android:layout_marginBottom="32dp" />
+
+                <!-- Add Task Button -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_add_task"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:text="+ Thêm công việc"
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:backgroundTint="#3B82F6"
+                    app:cornerRadius="12dp"
+                    android:layout_marginHorizontal="8dp" />
+
+            </LinearLayout>
+
+        </FrameLayout>
+
+    </LinearLayout>
+
+    <!-- Bottom Navigation -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_gravity="bottom"
+        android:background="@android:color/white"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <!-- Stats Icon -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_stats"
+                android:tint="#3B82F6" />
+
+        </LinearLayout>
+
+        <!-- Center FAB -->
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center">
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fab_add"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:src="@drawable/ic_add"
+                app:backgroundTint="#3B82F6"
+                app:tint="@android:color/white"
+                app:elevation="6dp"
+                app:fabSize="normal"
+                app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.FloatingActionButton"
+                android:contentDescription="@string/cd_add_new_task" />
+
+        </RelativeLayout> 
+
+        <!-- Calendar Icon -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_calendar_bottom"
+                android:tint="#3B82F6" />
+
+        </LinearLayout>
+
+    </LinearLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
