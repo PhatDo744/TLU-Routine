@@ -28,6 +28,8 @@
     <string name="cancel_button">Hủy Bỏ</string>
 
     <!-- Content Descriptions -->
+    <string name="cd_notification_icon">Biểu tượng thông báo</string>
+    <string name="cd_delete_notification">Xóa thông báo</string>
     <string name="cd_no_tasks">Không có công việc</string>
     <string name="cd_add_new_task">Thêm công việc mới</string>
     <string name="cd_calendar_icon">Biểu tượng lịch</string>

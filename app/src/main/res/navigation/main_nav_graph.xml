@@ -12,6 +12,11 @@
         tools:layout="@layout/fragment_home" />
 
     <fragment
+        android:id="@+id/nav_stats"
+        android:label="Thống kê"
+        tools:layout="@layout/fragment_home" />
+
+    <fragment
         android:id="@+id/nav_tags"
         android:name="com.example.tlu_routine.fragment.TagManagerFragment"
         android:label="Quản lý thẻ sự kiện"
@@ -24,6 +29,25 @@
             app:destination="@id/deleteConfirmationDialogFragment" />
     </fragment>
 
+    <fragment
+        android:id="@+id/fragment_notification"
+        android:name="com.example.tlu_routine.fragment.NotificationFragment"
+        android:label="fragment_notification"
+        tools:layout="@layout/fragment_notification" />
+
+    <fragment
+        android:id="@+id/fragment_notification_detail"
+        android:name="com.example.tlu_routine.fragment.NotificationDetailFragment"
+        android:label="fragment_notification_detail"
+        tools:layout="@layout/fragment_notification_detail" />
+
+    <fragment
+        android:id="@+id/fragment_notification_settings"
+        android:name="com.example.tlu_routine.fragment.NotificationSettingsFragment"
+        android:label="fragment_notification_settings"
+        tools:layout="@layout/fragment_notification_settings" />
+
+    <!-- Destination cho dialog thêm/sửa thẻ -->
     <dialog
         android:id="@+id/addEditTagDialogFragment"
         android:name="com.example.tlu_routine.fragment.AddEditTagDialogFragment"
@@ -53,10 +77,7 @@
             app:argType="integer" />
     </dialog>
 
-    <fragment
-        android:id="@+id/nav_stats"
-        android:name="com.example.tlu_routine.fragment.StatsFragment"
-        android:label="Thống kê"
-        tools:layout="@layout/fragment_home" />
-
+    <action
+        android:id="@+id/action_tagManagerFragment_to_addEditTagDialogFragment"
+        app:destination="@id/addEditTagDialogFragment" />
 </navigation>
