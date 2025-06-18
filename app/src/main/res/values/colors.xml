@@ -8,4 +8,12 @@
     <color name="default_text_color">#212121</color>
     <color name="light_gray_background">#F9FAFB</color>
     <color name="divider_color">#E5E7EB</color>
+    <color name="gray">#FF9E9E9E</color>
+    <!-- Gray colors -->
+    <color name="gray_300">#FFE0E0E0</color>
+    <color name="gray_600">#FF757575</color>
+    <color name="gray_800">#FF424242</color>
+
+    <!-- Blue colors -->
+    <color name="blue_500">#FF2196F3</color>
 </resources>
