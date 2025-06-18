@@ -67,4 +67,8 @@
     <string name="error_icon">Error Icon</string>
     <string name="close_button">Close Button</string>
 
+    <string name="warning_icon">Warninng Icon</string>
+    <string name="warning_title">Không có dữ liệu</string>
+    <string name="no_data_message">Vui lòng chọn khoảng thời gian khác.</string>
+
 </resources>

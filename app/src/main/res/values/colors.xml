@@ -44,4 +44,5 @@
     <color name="background_dark">#303030</color>
 
     <color name="slate_gray">#6B7280</color>
+    <color name="warning_yellow">#FCD34D</color>
 </resources>
