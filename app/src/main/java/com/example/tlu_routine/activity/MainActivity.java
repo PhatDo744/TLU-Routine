@@ -12,6 +12,14 @@ import androidx.navigation.ui.NavigationUI;
 import com.example.tlu_routine.R;
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.content.Context;
+import android.os.Build;
+import androidx.core.app.NotificationCompat;
+import com.example.tlu_routine.adapter.NotificationAdapter;
+import com.example.tlu_routine.fragment.NotificationFragment;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -62,5 +70,31 @@ public class MainActivity extends AppCompatActivity {
                 fabAdd.setVisibility(View.VISIBLE);
             }
         });
+
+        sendAllNotifications();
+    }
+
+    private void sendAllNotifications() {
+        // Lấy danh sách notification mẫu giống NotificationFragment
+        List<NotificationAdapter.NotificationAdapterItem> notificationList = new NotificationFragment().getSampleNotificationsStatic(this);
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        String channelId = "routine_channel";
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(channelId, "Routine Notifications", NotificationManager.IMPORTANCE_DEFAULT);
+            notificationManager.createNotificationChannel(channel);
+        }
+        int notifyId = 1000;
+        for (NotificationAdapter.NotificationAdapterItem item : notificationList) {
+            if (item instanceof NotificationAdapter.NotificationItem) {
+                NotificationAdapter.NotificationItem n = (NotificationAdapter.NotificationItem) item;
+                NotificationCompat.Builder builder = new NotificationCompat.Builder(this, channelId)
+                        .setSmallIcon(n.iconRes)
+                        .setContentTitle(n.title)
+                        .setContentText(n.content)
+                        .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                        .setAutoCancel(true);
+                notificationManager.notify(notifyId++, builder.build());
+            }
+        }
     }
 }

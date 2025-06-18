@@ -76,26 +76,29 @@
         android:paddingRight="24dp"
         android:paddingTop="16dp"
         android:paddingBottom="24dp">
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnCancel"
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_weight="1"
-            android:text="Hủy"
-            style="@style/DialogOutlineButton"
-            android:textStyle="bold"
-            android:textSize="16sp" />
-        <View
-            android:layout_width="16dp"
-            android:layout_height="0dp" />
+
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnConfirm"
+            style="@style/DialogBlueButton"
             android:layout_width="0dp"
             android:layout_height="48dp"
             android:layout_weight="1"
             android:text="Xác nhận"
-            style="@style/DialogBlueButton"
-            android:textStyle="bold"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <View
+            android:layout_width="16dp"
+            android:layout_height="0dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCancel"
+            style="@style/DialogOutlineButton"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:text="Hủy"
+            android:textSize="16sp"
+            android:textStyle="bold" />
     </LinearLayout>
 </LinearLayout> 

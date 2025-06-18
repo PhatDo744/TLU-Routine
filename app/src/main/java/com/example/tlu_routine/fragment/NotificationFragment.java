@@ -20,6 +20,7 @@ import java.util.List;
 import android.graphics.drawable.Drawable;
 import androidx.core.content.ContextCompat;
 import android.widget.ImageButton;
+import android.content.Context;
 
 public class NotificationFragment extends Fragment implements NotificationAdapter.OnDeleteButtonClickListener {
     private NotificationAdapter adapter;
@@ -354,5 +355,18 @@ public class NotificationFragment extends Fragment implements NotificationAdapte
             System.err.println("Notification with ID " + notificationId + " not found for button deletion.");
             updateUI();
         }
+    }
+
+    public static List<NotificationAdapter.NotificationAdapterItem> getSampleNotificationsStatic(Context context) {
+        List<NotificationAdapter.NotificationAdapterItem> list = new ArrayList<>();
+        long currentId = 0;
+        list.add(new NotificationAdapter.NotificationHeader("HÔM NAY"));
+        list.add(new NotificationAdapter.NotificationItem(currentId++, com.example.tlu_routine.R.drawable.ic_calendar, "Nhắc nhở: Họp team hàng tuần", "Sự kiện sẽ bắt đầu trong 15 phút", "14:30", true, true, com.example.tlu_routine.R.drawable.bg_notification_active));
+        list.add(new NotificationAdapter.NotificationItem(currentId++, com.example.tlu_routine.R.drawable.ic_calendar, "Sự kiện đã hoàn thành", "Presentation cho khách hàng đã kết thúc", "10:00", false, false, com.example.tlu_routine.R.drawable.bg_notification_done));
+        list.add(new NotificationAdapter.NotificationHeader("HÔM QUA"));
+        list.add(new NotificationAdapter.NotificationItem(currentId++, com.example.tlu_routine.R.drawable.ic_alarm, "Nhắc nhở: Deadline dự án", "Còn 2 ngày để hoàn thành báo cáo", "16:45", false, false, com.example.tlu_routine.R.drawable.bg_notification_reminder));
+        list.add(new NotificationAdapter.NotificationItem(currentId++, com.example.tlu_routine.R.drawable.ic_alarm, "Nhắc nhở: Deadline dự án", "Còn 2 ngày để hoàn thành báo cáo", "16:45", false, false, com.example.tlu_routine.R.drawable.bg_notification_reminder));
+        list.add(new NotificationAdapter.NotificationItem(currentId++, com.example.tlu_routine.R.drawable.ic_alarm, "Nhắc nhở: Deadline dự án", "Còn 2 ngày để hoàn thành báo cáo", "16:45", false, false, com.example.tlu_routine.R.drawable.bg_notification_reminder));
+        return list;
     }
 } 
