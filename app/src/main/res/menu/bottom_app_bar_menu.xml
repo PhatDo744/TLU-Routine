@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/nav_stats"
+        android:id="@+id/nav_statistics"
         android:icon="@drawable/ic_stats"
         android:title="Thống kê" />
     <item
